@@ -1,0 +1,6 @@
+.leftImg {
+  left: 0% !important;
+  height: 100% !important;
+  width: initial !important;
+  filter: saturate(80%);
+}
