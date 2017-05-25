@@ -4,3 +4,9 @@
   width: initial !important;
   filter: saturate(80%);
 }
+
+.delete {
+  position: absolute;
+  right: 10%;
+  bottom: 5%;
+}

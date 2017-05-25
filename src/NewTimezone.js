@@ -27,7 +27,7 @@ export default class NewTimezone extends Component {
     if (!this.state.active) {
       content = (
         <div>
-          <FloatingActionButton className="fab" onTouchTap={this.handleTap}>
+          <FloatingActionButton className="add" onTouchTap={this.handleTap}>
             <ContentAdd />
           </FloatingActionButton>
           <p><b>ADD LOCATION</b></p>
