@@ -36,7 +36,7 @@ export default class NewTimezone extends Component {
       if (this.focusTimeout) clearTimeout(this.focusTimeout);
     } else {
       content = (
-        <div>
+        <div style={{padding: '20px'}}>
           <CityAutoComplete ref="cityName" onSelect={this.onSelect}/>
         </div>
       );

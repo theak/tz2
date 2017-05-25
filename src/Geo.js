@@ -58,9 +58,6 @@ export default class Geo {
           const secondary_text = _simplifySecondary(json.geoplugin_region 
               + ', ' + json.geoplugin_countryName);
           callback(main_text + ', ' + secondary_text);
-        })
-        .catch((err) => {
-          console.log('json parsing failed :(');
         });
   }
 
