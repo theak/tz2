@@ -9,7 +9,46 @@
   position: absolute;
   right: 10%;
   bottom: 5%;
+  z-index: 99;
+  opacity: 0;
+  width: 32px !important;
+  height: 32px !important;
+  cursor: pointer;
+  transition: opacity ease 0.3s !important;
 }
+.tz:hover .delete {
+  opacity: 0.7;
+}
+.delete:hover {
+  opacity: 1 !important;
+  transition: opacity ease 0.1s !important;
+}
+.tz:active .delete {opacity: 0}
 
 .tz {transition: opacity ease 0.5s}
 .dragged {opacity: 0.7}
+
+.tz>div:not(.delete) {
+  top: 2vw !important;
+  bottom: initial !important;
+}
+.tz>div:not(.delete)>div {
+  overflow: initial !important;
+}
+.tz>div:not(.delete)>div>div:nth-child(2) {
+  position: absolute;
+  overflow: initial !important;
+}
+
+@media (min-width: 1400px) {.tz>div:not(.delete)>div>div:nth-child(2) {top: 100px}}
+@media (max-width: 1100px) {.tz>div:not(.delete)>div>div:nth-child(2) {top: 60px}}
+@media (max-width: 400px) {.tz>div:not(.delete)>div>div:nth-child(2) {top: 40px}}
+
+.city {
+  margin-top: 0px;
+  padding-left: 0.5vw;
+  font-size: 1.8vw;
+}
+.time {
+  font-size: 4vw;
+}

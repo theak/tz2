@@ -132,10 +132,11 @@ class App extends Component {
   }
 
   removeTimezone(index) {
-    this.state.timeZones[index].index = index;
+    const timeZones = this.state.timeZones.slice();
+    timeZones[index].index = index;
     this.setState({
-      timeZones: this.state.timeZones.filter((_, i) => i !== index),
-      lastDeleted: this.state.timeZones[index],
+      timeZones: timeZones.filter((_, i) => i !== index),
+      lastDeleted: timeZones[index],
       snackbarOpen: true
     }, this.updateLocalStorage);
   }
@@ -156,19 +157,17 @@ class App extends Component {
       const tzImg = <img alt={timeZone.name} src={timeZone.imgSrc} className="leftImg" 
           onError={(e) => this.reloadImage(index)}
           onMouseDown={(e) => {this.startDrag(e.clientX, index); e.preventDefault()}} />;
-      const tzDelete = index ? (
-        <FloatingActionButton className="delete" mini={true} secondary={true} 
-            onTouchTap={() => this.removeTimezone(index)}>
-          <ActionDelete />
-        </FloatingActionButton>
-      ) : <div/>;
-      const time = <h1><Timestamp time={timeValue} format='time' utc={false}/></h1>;
+      const tzDelete = index ? (<ActionDelete 
+        color='#DDD' className='delete'
+        onTouchTap={() => this.removeTimezone(index)}
+        />) : <div/>;
+      const time = <h1 className='time'><Timestamp time={timeValue} format='time' utc={false}/></h1>;
       const dragged = this.state.dragState.active && this.state.dragState.startIndex === index;
       const tzTile = (
         <GridTile 
             className={'tz' + (dragged ? ' dragged' : '')}
-            key={index} subtitle={<h3>{timeZone.name}</h3>} title={time}
-            titleBackground='linear-gradient(to top, rgba(0,0,0,0.7) 0%,rgba(0,0,0,0.3) 70%,rgba(0,0,0,0) 100%)'
+            key={index} subtitle={<h1 className='city'>{timeZone.name}</h1>} title={time}
+            titleBackground='linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.1) 70%,rgba(0,0,0,0) 100%)'
             titleStyle={titleStyle}>{tzDelete}{tzImg} </GridTile>
         );
       return tzTile;
