@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import Timestamp from 'react-timestamp';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
-import ContentDeleteSweep from 'material-ui/svg-icons/content/delete-sweep';
+import ActionDelete from 'material-ui/svg-icons/action/delete';
 import Snackbar from 'material-ui/Snackbar';
 import {GridList, GridTile} from 'material-ui/GridList';
 import Geo from './Geo';
@@ -40,7 +40,6 @@ class App extends Component {
     super();
     const lastTimezones = localStorage.getItem(localKey);
     let timeZones = initialTimezones;
-    this.move = move;
     if (lastTimezones) {
       const lastTimezonesArr = JSON.parse(lastTimezones);
       if (lastTimezonesArr.length > 0) timeZones = lastTimezonesArr;
@@ -77,19 +76,26 @@ class App extends Component {
     this.setState({height: window.innerHeight});
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  updateLocalStorage() {
     localStorage.setItem(localKey, JSON.stringify(this.state.timeZones));
   }
 
   populateImages() {
-    var timeZones = this.state.timeZones.slice();
+    const timeZones = this.state.timeZones.slice();
     for (var timeZone of timeZones) {
-      if (!timeZone.imgSrc) 
+      if (!timeZone.imgSrc) ((timeZone) => {
         this.imageFetch.getImageUrl(getFirstPart(timeZone.name), (imgUrl) => {
           timeZone.imgSrc = imgUrl;
-          this.setState({timeZones: timeZones});
+          this.setState({timeZones: timeZones}, this.updateLocalStorage);
         });
+      })(timeZone);
     }
+  }
+
+  reloadImage(index) {
+    const timeZones = this.state.timeZones.slice();
+    timeZones[index].imgSrc = null;
+    this.setState({timeZones: timeZones}, this.populateImages);
   }
 
   handleNewCity(city) {
@@ -101,7 +107,11 @@ class App extends Component {
   }
 
   startDrag(clientX, clientIndex) {
-    this.setState({dragState: {active: true, startX: clientX, startIndex: clientIndex}});
+    this.setState({dragState: 
+        {active: true, startX: clientX, startIndex: clientIndex}});
+  }
+  endDrag() {
+    this.setState({dragState: {active: false}});
   }
 
   handleMouseMove(event) {
@@ -116,11 +126,9 @@ class App extends Component {
     const newPos = this.state.dragState.startIndex + posChange;
     if (posChange !== 0 && newPos > 0 && newPos < this.state.timeZones.length) {
       const timeZones = move(this.state.timeZones, this.state.dragState.startIndex, newPos);
-      this.setState({timeZones: timeZones}, () => this.startDrag(clientX, newPos));
+      this.setState({timeZones: timeZones}, this.updateLocalStorage);
+      this.startDrag(clientX, newPos);
     }
-  }
-  endDrag() {
-    this.setState({dragState: {active: false}});
   }
 
   removeTimezone(index) {
@@ -129,7 +137,7 @@ class App extends Component {
       timeZones: this.state.timeZones.filter((_, i) => i !== index),
       lastDeleted: this.state.timeZones[index],
       snackbarOpen: true
-    });
+    }, this.updateLocalStorage);
   }
 
   undoRemoveTimezone() {
@@ -138,7 +146,7 @@ class App extends Component {
       timeZones: this.state.timeZones.slice(0, index).concat(this.state.lastDeleted)
           .concat(this.state.timeZones.slice(index)),
       lastDeleted: null
-    });
+    }, this.updateLocalStorage);
   }
 
   render() {
@@ -146,20 +154,20 @@ class App extends Component {
     const timeZones = this.state.timeZones.map((timeZone, index) => {
       const timeValue = getTimeAtOffset(timeZone.offset);
       const tzImg = <img alt={timeZone.name} src={timeZone.imgSrc} className="leftImg" 
+          onError={(e) => this.reloadImage(index)}
           onMouseDown={(e) => {this.startDrag(e.clientX, index); e.preventDefault()}} />;
       const tzDelete = index ? (
         <FloatingActionButton className="delete" mini={true} secondary={true} 
             onTouchTap={() => this.removeTimezone(index)}>
-          <ContentDeleteSweep />
+          <ActionDelete />
         </FloatingActionButton>
       ) : <div/>;
       const time = <h1><Timestamp time={timeValue} format='time' utc={false}/></h1>;
+      const dragged = this.state.dragState.active && this.state.dragState.startIndex === index;
       const tzTile = (
         <GridTile 
-            className='tz'
-            key={index} 
-            subtitle={<h3>{timeZone.name}</h3>} 
-            title={time}
+            className={'tz' + (dragged ? ' dragged' : '')}
+            key={index} subtitle={<h3>{timeZone.name}</h3>} title={time}
             titleBackground='linear-gradient(to top, rgba(0,0,0,0.7) 0%,rgba(0,0,0,0.3) 70%,rgba(0,0,0,0) 100%)'
             titleStyle={titleStyle}>{tzDelete}{tzImg} </GridTile>
         );
@@ -174,7 +182,6 @@ class App extends Component {
         action={removed && 'undo'}
         autoHideDuration={removed ? 5000 : 1000}
         onActionTouchTap={this.undoRemoveTimezone}
-        style={{position: 'absolute'}}
         onRequestClose={() => this.setState({snackbarOpen: false})}
       />);
 

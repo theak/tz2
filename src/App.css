@@ -10,3 +10,6 @@
   right: 10%;
   bottom: 5%;
 }
+
+.tz {transition: opacity ease 0.5s}
+.dragged {opacity: 0.7}

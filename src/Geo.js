@@ -20,6 +20,10 @@ export default class Geo {
       var googleMaps = (window.google && window.google.maps);
       this.autocompleteService = new googleMaps.places.AutocompleteService();
       this.placesService = new googleMaps.places.PlacesService(document.createElement('div'));
+      this.types = ['(cities)'];
+      this.bounds = new googleMaps.LatLngBounds(
+        new googleMaps.LatLng(-90, -180),
+        new googleMaps.LatLng(90, 180));
     }
 
     return instance;
@@ -27,7 +31,8 @@ export default class Geo {
 
   getCities(query, callback) {
     this.autocompleteService.getPlacePredictions({
-      types: ['(cities)'],
+      types: this.types,
+      bounds: this.bounds,
       input: query
     }, callback);
   }
