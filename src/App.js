@@ -55,7 +55,7 @@ class App extends Component {
       width: window.innerWidth,
       height: window.innerHeight,
       timeZones: timeZones,
-      seconds: new Date().getSeconds(),
+      seconds: Math.floor(new Date().getSeconds()),
       snackbarOpen: false,
       dragState: {active: false}
     };
@@ -173,6 +173,7 @@ class App extends Component {
   }
 
   render() {
+    if (this.state.seconds === 0) setTimeout(() => this.setState({seconds: 1}), 500);
     const titleStyle = {marginTop: '-30px', marginBottom: '-30px'};
     const timeZones = this.state.timeZones.map((timeZone, index) => {
       const tzImg = <img alt={timeZone.name} src={timeZone.imgSrc} className="leftImg" 
@@ -188,7 +189,7 @@ class App extends Component {
       const tzTile = (
         <GridTile
             onMouseDown={(e) => {this.startDrag(e.clientX, index); e.preventDefault()}}
-            className={'tz' + (dragged ? ' dragged' : '')}
+            className={'tz' + (dragged ? ' dragged' : '') + ((this.state.seconds === 0) ? ' pulsed' : '')}
             key={index} title={time}
             onTouchTap={() => this.refs.newTz.setState({active: false})}
             subtitle={<div className='subtitle'>

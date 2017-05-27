@@ -15,7 +15,7 @@ export default class Ticker extends Component {
     //return <div className='ticker'>[{ticks}]</div>
     return (<LinearProgress
         className='ticker'
-        color='#880e4f'
+        color='#333'
         mode='determinate' 
         value={seconds / 60 * 100} />)
   }
