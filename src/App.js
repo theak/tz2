@@ -7,6 +7,7 @@ import {GridList, GridTile} from 'material-ui/GridList';
 import Geo from './Geo';
 import NewTimezone from './NewTimezone';
 import ImageFetch from './ImageFetch';
+import Ticker from './Ticker';
 import './App.css';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 
@@ -20,7 +21,8 @@ const initialTimezones = [{
 }];
 
 function getTimeAtOffset(offset) {
-  return Date.now() / 1000 + offset * 60;
+  const rawTime = Date.now() / 1000 + offset * 60;
+  return rawTime - (rawTime % 60);
 }
 
 function displayOffset(tzOffset) {
@@ -53,6 +55,7 @@ class App extends Component {
       width: window.innerWidth,
       height: window.innerHeight,
       timeZones: timeZones,
+      seconds: new Date().getSeconds(),
       snackbarOpen: false,
       dragState: {active: false}
     };
@@ -74,11 +77,19 @@ class App extends Component {
 
   componentDidMount() {
     window.addEventListener('resize', this.updateDimensions);
-    this.updateInterval = setInterval(() => this.forceUpdate(), 5000);
+    this.updateInterval = setInterval(() => this.updateTime(), 1000);
     if (window.jQuery) window.jQuery('#gridList').mousewheel((event, delta) => {
       window.jQuery('#gridList')[0].scrollLeft -= (delta * 30);
       event.preventDefault();
     });
+  }
+
+  updateTime() {
+    const timeZones = this.state.timeZones.slice();
+    for (var timeZone of timeZones)
+      timeZone.timestamp = getTimeAtOffset(timeZone.offset);
+    const seconds = new Date().getSeconds();
+    this.setState({timeZones: timeZones, seconds: seconds});
   }
 
   updateDimensions() {
@@ -164,7 +175,6 @@ class App extends Component {
   render() {
     const titleStyle = {marginTop: '-30px', marginBottom: '-30px'};
     const timeZones = this.state.timeZones.map((timeZone, index) => {
-      const timeValue = getTimeAtOffset(timeZone.offset);
       const tzImg = <img alt={timeZone.name} src={timeZone.imgSrc} className="leftImg" 
           onError={(e) => this.reloadImage(index)} />;
       const tzDelete = index ? (<ActionDelete 
@@ -172,7 +182,7 @@ class App extends Component {
         onTouchTap={() => this.removeTimezone(index)}
         />) : <div/>;
       const header = <div className={'header col' + (index % 4)}/>;
-      const time = <h1 className='time'><Timestamp time={timeValue} format='time' utc={false}/></h1>;
+      const time = <h1 className='time'><Timestamp time={timeZone.timestamp} format='time' utc={false}/></h1>;
       const dragged = this.state.dragState.active && this.state.dragState.startIndex === index;
       const offset = <h3 className='offset'>GMT {displayOffset(timeZone.offset)}</h3>
       const tzTile = (
@@ -224,6 +234,9 @@ class App extends Component {
           </GridList>
         </MuiThemeProvider>
         <MuiThemeProvider>{snackbar}</MuiThemeProvider>
+        <MuiThemeProvider>
+          <Ticker seconds={this.state.seconds}/>
+        </MuiThemeProvider>
       </div>
     );
   }
