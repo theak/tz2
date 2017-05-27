@@ -76,6 +76,8 @@ class App extends Component {
   }
 
   componentDidMount() {
+    this.updateTime();
+    
     window.addEventListener('resize', this.updateDimensions);
     this.updateInterval = setInterval(() => this.updateTime(), 1000);
     if (window.jQuery) window.jQuery('#gridList').mousewheel((event, delta) => {

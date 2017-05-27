@@ -1,6 +1,7 @@
 import fetchJsonp from 'fetch-jsonp';
 
-const GEOLOC_URL = 'http://www.geoplugin.net/json.gp';
+const GEOLOC_URL = 'https://ip.iwantthetime.com/json.gp?ip=' 
+    + (window && window.clientIp);
 
 let instance = null;
 
