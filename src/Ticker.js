@@ -5,17 +5,12 @@ import './Ticker.css'
 export default class Ticker extends Component {
   render() {
     const seconds = this.props.seconds;
-    let ticks = [];
-    [...Array(60)].map((e, i) => {
-      return ticks.push(
-        <span 
-            className={'tick' + ((i <= seconds) ? ' show' : '')}
-            key={i}>|</span>);
-    });
-    //return <div className='ticker'>[{ticks}]</div>
+    const widthProp = this.props.width;
+    const width = widthProp ? widthProp : '100%';
     return (<LinearProgress
-        className='ticker'
+        className={'ticker' + (widthProp ? ' visible':'')}
         color='#333'
+        style={{width: width}}
         mode='determinate' 
         value={seconds / 60 * 100} />)
   }

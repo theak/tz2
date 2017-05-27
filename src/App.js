@@ -236,7 +236,11 @@ class App extends Component {
         </MuiThemeProvider>
         <MuiThemeProvider>{snackbar}</MuiThemeProvider>
         <MuiThemeProvider>
-          <Ticker seconds={this.state.seconds}/>
+          <Ticker
+              seconds={this.state.seconds}
+              width={window.jQuery && window.jQuery('.tz') 
+                  && (window.jQuery('.tz').width() * this.state.timeZones.length)}
+          />
         </MuiThemeProvider>
       </div>
     );
