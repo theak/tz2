@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import Timestamp from 'react-timestamp';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ActionDelete from 'material-ui/svg-icons/action/delete';
 import Snackbar from 'material-ui/Snackbar';
 import {GridList, GridTile} from 'material-ui/GridList';
@@ -10,6 +9,7 @@ import NewTimezone from './NewTimezone.js';
 import ImageFetch from './ImageFetch';
 import './App.css';
 import injectTapEventPlugin from 'react-tap-event-plugin';
+
 injectTapEventPlugin();
 
 const localKey = 'timeZones';
@@ -21,6 +21,10 @@ const initialTimezones = [{
 
 function getTimeAtOffset(offset) {
   return Date.now() / 1000 + offset * 60;
+}
+
+function displayOffset(tzOffset) {
+  return ((tzOffset > 0) ? '+' : '') + (tzOffset / 60);
 }
 
 function getFirstPart(str) {
@@ -46,6 +50,7 @@ class App extends Component {
     }
 
     this.state = {
+      width: window.innerWidth,
       height: window.innerHeight,
       timeZones: timeZones,
       snackbarOpen: false,
@@ -68,12 +73,16 @@ class App extends Component {
   }
 
   componentDidMount() {
-    window.addEventListener("resize", this.updateDimensions);
+    window.addEventListener('resize', this.updateDimensions);
     this.updateInterval = setInterval(() => this.forceUpdate(), 5000);
+    if (window.jQuery) window.jQuery('#gridList').mousewheel((event, delta) => {
+      window.jQuery('#gridList')[0].scrollLeft -= (delta * 30);
+      event.preventDefault();
+    });
   }
 
   updateDimensions() {
-    this.setState({height: window.innerHeight});
+    this.setState({height: window.innerHeight, width: window.innerWidth});
   }
 
   updateLocalStorage() {
@@ -94,7 +103,9 @@ class App extends Component {
 
   reloadImage(index) {
     const timeZones = this.state.timeZones.slice();
+    if (timeZones[index].reloaded) return;
     timeZones[index].imgSrc = null;
+    timeZones[index].reloaded = true;
     this.setState({timeZones: timeZones}, this.populateImages);
   }
 
@@ -107,7 +118,7 @@ class App extends Component {
   }
 
   startDrag(clientX, clientIndex) {
-    this.setState({dragState: 
+    if (clientIndex) this.setState({dragState: 
         {active: true, startX: clientX, startIndex: clientIndex}});
   }
   endDrag() {
@@ -161,14 +172,20 @@ class App extends Component {
         color='#DDD' className='delete'
         onTouchTap={() => this.removeTimezone(index)}
         />) : <div/>;
+      const header = <div className={'header col' + (index % 4)}/>;
       const time = <h1 className='time'><Timestamp time={timeValue} format='time' utc={false}/></h1>;
       const dragged = this.state.dragState.active && this.state.dragState.startIndex === index;
+      const offset = <h3 className='offset'>GMT {displayOffset(timeZone.offset)}</h3>
       const tzTile = (
-        <GridTile 
+        <GridTile
+            //style={{minWidth: '300px'}}
             className={'tz' + (dragged ? ' dragged' : '')}
-            key={index} subtitle={<h1 className='city'>{timeZone.name}</h1>} title={time}
-            titleBackground='linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.1) 70%,rgba(0,0,0,0) 100%)'
-            titleStyle={titleStyle}>{tzDelete}{tzImg} </GridTile>
+            key={index} title={time}
+            onTouchTap={() => this.refs.newTz.setState({active: false})}
+            subtitle={<div className='subtitle'>
+              <h1 className='city'>{timeZone.name}</h1>{offset}</div>}
+            titleBackground='rgba(0, 0, 0, 0)'
+            titleStyle={titleStyle}>{header}{tzDelete}{tzImg} </GridTile>
         );
       return tzTile;
     });
@@ -183,15 +200,27 @@ class App extends Component {
         onActionTouchTap={this.undoRemoveTimezone}
         onRequestClose={() => this.setState({snackbarOpen: false})}
       />);
+    const root = {
+      display: 'flex',
+      flexWrap: 'wrap'
+    }
+    const gridList = {
+      display: 'flex',
+      flexWrap: 'nowrap',
+      overflowX: 'auto',
+    }
 
     return (
-      <div>
+      <div style={root}>
         <MuiThemeProvider>
-          <GridList cellHeight={this.state.height} cols={4} padding={0}
+          <GridList cellHeight={this.state.height} cols={2.2} padding={0}
+              style={gridList}
+              id='gridList'
+              className='condensed'
               onMouseUp={this.endDrag}
               onMouseMove={this.handleMouseMove}>
             {timeZones}
-            <NewTimezone onAddCity={this.handleNewCity}/>
+            <NewTimezone ref='newTz' onAddCity={this.handleNewCity}/>
           </GridList>
         </MuiThemeProvider>
         <MuiThemeProvider>{snackbar}</MuiThemeProvider>

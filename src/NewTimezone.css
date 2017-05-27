@@ -1,14 +1,23 @@
 .fabWrapper {
-  position: relative;
-  top: 50%;
-  transform: translateY(-50%);
+  width: 120px;
+  left: 0px;
   text-align: center;
-  width: 50%;
+  top: 50%;
 }
-.fabWrapper>div>p {
+.fabWrapper, .inputWrapper {
+  position: relative;
+  top: 100px;
+}
+.inputWrapper {
+  padding: 20px;
+}
+.fabWrapper>p {
   visibility: hidden;
   opacity: 0;
   transition: visibility 0.2s, opacity 0.3s linear;
+}
+.inputWrapper>div>div {
+  display: block !important;
 }
 .add>button>div>div {
   transition: transform 0.5s ease-in-out;
@@ -19,4 +28,7 @@
 .add:hover~p {
   visibility: visible;
   opacity: 0.6;
+}
+.gridList>div:last-child {
+  width: 100px !important;
 }

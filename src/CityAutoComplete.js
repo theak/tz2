@@ -24,10 +24,10 @@ export default class CityAutoComplete extends Component {
     const suggestion = this.getSuggestion(value);
     //Value was selected
     if (suggestion) {
-      this.clear();
       this.geo.getDetails(suggestion.value.placeId, (response)=> {
         suggestion.value.utcOffset = response.utc_offset;
         this.props.onSelect(suggestion);
+        this.clear();
       });
       return;
     }
@@ -45,19 +45,28 @@ export default class CityAutoComplete extends Component {
   clear() {
     this.refs.autoComplete.setState({searchText: ''})
   }
-  
+
   focus() {
     this.refs.autoComplete.focus();
+    if (window && window.jQuery) window.jQuery('#root>div>div').scrollLeft(4000)
+  }
+  
+  onBlur() {
+    if (this.refs.autoComplete.state.searchText.length === 0) this.props.onBlur();
   }
 
   render() {
     return (
-      <div>
+      <div id='search'>
         <AutoComplete
           ref="autoComplete"
+          style={{fontSize: '32px'}}
+          className='autoComplete'
           hintText="Enter city name"
+          fullWidth={true}
           dataSource={this.state.dataSource}
           onUpdateInput={this.handleUpdateInput}
+          onBlur={() => this.onBlur()}
           filter={(searchText, key) => true}
         />
       </div>
