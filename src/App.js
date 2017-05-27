@@ -5,7 +5,7 @@ import ActionDelete from 'material-ui/svg-icons/action/delete';
 import Snackbar from 'material-ui/Snackbar';
 import {GridList, GridTile} from 'material-ui/GridList';
 import Geo from './Geo';
-import NewTimezone from './NewTimezone.js';
+import NewTimezone from './NewTimezone';
 import ImageFetch from './ImageFetch';
 import './App.css';
 import injectTapEventPlugin from 'react-tap-event-plugin';
@@ -166,8 +166,7 @@ class App extends Component {
     const timeZones = this.state.timeZones.map((timeZone, index) => {
       const timeValue = getTimeAtOffset(timeZone.offset);
       const tzImg = <img alt={timeZone.name} src={timeZone.imgSrc} className="leftImg" 
-          onError={(e) => this.reloadImage(index)}
-          onMouseDown={(e) => {this.startDrag(e.clientX, index); e.preventDefault()}} />;
+          onError={(e) => this.reloadImage(index)} />;
       const tzDelete = index ? (<ActionDelete 
         color='#DDD' className='delete'
         onTouchTap={() => this.removeTimezone(index)}
@@ -178,15 +177,16 @@ class App extends Component {
       const offset = <h3 className='offset'>GMT {displayOffset(timeZone.offset)}</h3>
       const tzTile = (
         <GridTile
-            //style={{minWidth: '300px'}}
+            onMouseDown={(e) => {this.startDrag(e.clientX, index); e.preventDefault()}}
             className={'tz' + (dragged ? ' dragged' : '')}
             key={index} title={time}
             onTouchTap={() => this.refs.newTz.setState({active: false})}
             subtitle={<div className='subtitle'>
               <h1 className='city'>{timeZone.name}</h1>{offset}</div>}
             titleBackground='rgba(0, 0, 0, 0)'
-            titleStyle={titleStyle}>{header}{tzDelete}{tzImg} </GridTile>
-        );
+            titleStyle={titleStyle}>
+          {header}{tzDelete}{tzImg}
+        </GridTile>);
       return tzTile;
     });
 

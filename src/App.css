@@ -73,10 +73,10 @@
 #root>div>div {
 	width: 100%;
 }
-.col0 {background-color: #1565c0 !important}
-.col1 {background-color: #ad1457 !important}
-.col2 {background-color: #00838f !important}
-.col3 {background-color: #6a1b9a !important}
+.col0 {background-color: #1a237e !important}
+.col1 {background-color: #880e4f !important}
+.col2 {background-color: #b71c1c !important}
+.col3 {background-color: #004d40 !important}
 
 @media(max-width: 600px) {
   #gridList>div {
