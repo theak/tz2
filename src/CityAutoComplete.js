@@ -47,7 +47,7 @@ export default class CityAutoComplete extends Component {
   }
 
   focus() {
-    this.refs.autoComplete.focus();
+    if (this.refs.autoComplete.state.searchText === '') this.refs.autoComplete.focus();
     if (window && window.jQuery) window.jQuery('#root>div>div').scrollLeft(4000)
   }
   
