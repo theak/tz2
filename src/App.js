@@ -127,7 +127,10 @@ class App extends Component {
       name: city.text, offset: city.value.utcOffset, imgSrc: null
     };
     this.setState({
-      timeZones: this.state.timeZones.concat(newTz)}, this.populateImages);
+      timeZones: this.state.timeZones.concat(newTz)}, () => {
+        this.updateTime();
+        this.populateImages();
+      });
   }
 
   startDrag(clientX, clientIndex) {
@@ -175,7 +178,7 @@ class App extends Component {
   }
 
   render() {
-    if (this.state.seconds === 0) setTimeout(() => this.setState({seconds: 1}), 500);
+    if (this.state.seconds === 0) setTimeout(() => this.setState({seconds: 1}), 300);
     const titleStyle = {marginTop: '-30px', marginBottom: '-30px'};
     const timeZones = this.state.timeZones.map((timeZone, index) => {
       const tzImg = <img alt={timeZone.name} src={timeZone.imgSrc} className="leftImg" 

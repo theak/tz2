@@ -60,9 +60,10 @@ export default class CityAutoComplete extends Component {
       <div id='search'>
         <AutoComplete
           ref="autoComplete"
-          style={{fontSize: '32px'}}
+          inputStyle={{fontSize: '24px'}}
+          hintStyle={{fontSize: '24px'}}
           className='autoComplete'
-          hintText="Enter city name"
+          hintText="Enter city name to add"
           fullWidth={true}
           dataSource={this.state.dataSource}
           onUpdateInput={this.handleUpdateInput}

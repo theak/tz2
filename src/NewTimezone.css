@@ -32,6 +32,9 @@
   visibility: visible;
   opacity: 0.6;
 }
+div.autocomplete {
+  font-size: 36px !important;
+}
 .gridList>div:last-child {
   width: 100px !important;
 }
