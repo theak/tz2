@@ -9,7 +9,7 @@ export default class Ticker extends Component {
     const width = widthProp ? widthProp : '100%';
     return (<LinearProgress
         className={'ticker' + (widthProp ? ' visible':'')}
-        color='#333'
+        color='#322'
         style={{width: width}}
         mode='determinate' 
         value={seconds / 60 * 100} />)
