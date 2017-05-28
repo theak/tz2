@@ -16,7 +16,7 @@ export default class Welcome extends React.Component {
   render() {
     const actions = [
       <FlatButton
-        label="Got it"
+        label="Get started"
         primary={true}
         onTouchTap={this.handleClose}
       />
@@ -26,16 +26,16 @@ export default class Welcome extends React.Component {
       <div>
         <Dialog
           className='welcome'
-          title="Welcome!"
+          title="Design your world clock"
           actions={actions}
           modal={false}
           open={this.state.open}
           onRequestClose={this.handleClose}
           bodyStyle={{fontSize: '18px'}}
-          titleStyle={{fontSize: '32px'}}
+          titleStyle={{fontSize: '28px'}}
           contentStyle={{maxWidth: '512px'}}
         >
-          Use the + button to add cities to your world clock:<br/>
+          Use the + button to add cities to the clock.<br/>
           <div><img onTouchTap={this.handleClose} className='screenshot' src='/screenshot.png' width='343'/></div>
           Your cities are saved locally and will appear whenever you visit iwantmytime.com on this computer.
         </Dialog>

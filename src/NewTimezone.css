@@ -1,7 +1,7 @@
 .fabWrapper {
-  width: 120px;
+  width: 200px;
   left: 0px;
-  text-align: center;
+  text-align: left;
   top: 50%;
 }
 .fabWrapper>.add.education {
@@ -13,6 +13,7 @@
 }
 .inputWrapper {
   padding: 20px;
+  min-width: 300px;
 }
 .fabWrapper>p {
   visibility: hidden;
@@ -21,6 +22,9 @@
 }
 .inputWrapper>div>div {
   display: block !important;
+}
+.add {
+  margin-left: 30px !important;
 }
 .add>button>div>div {
   transition: transform 0.5s ease-in-out;
