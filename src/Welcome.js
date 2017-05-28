@@ -36,7 +36,11 @@ export default class Welcome extends React.Component {
           contentStyle={{maxWidth: '512px'}}
         >
           Use the + button to add cities to the clock.<br/>
-          <div><img onTouchTap={this.handleClose} className='screenshot' src='/screenshot.png' width='343'/></div>
+          <div><img
+              onTouchTap={this.handleClose}
+              alt='Screenshot'
+              className='screenshot'
+              src='/screenshot.png' width='343'/></div>
           Your cities are saved locally and will appear whenever you visit iwantmytime.com on this computer.
         </Dialog>
       </div>

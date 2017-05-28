@@ -1,11 +1,9 @@
 import React, {Component} from 'react';
-import Timestamp from 'react-timestamp';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import ActionDelete from 'material-ui/svg-icons/action/delete';
 import Snackbar from 'material-ui/Snackbar';
-import {GridList, GridTile} from 'material-ui/GridList';
-import ProgressiveImage from 'react-progressive-image';
+import {GridList} from 'material-ui/GridList';
 import Geo from './Geo';
+import Timezone from './Timezone';
 import NewTimezone from './NewTimezone';
 import Welcome from './Welcome';
 import ImageFetch from './ImageFetch';
@@ -26,10 +24,6 @@ const initialTimezones = [{
 function getTimeAtOffset(offset) {
   const rawTime = Date.now() / 1000 + offset * 60;
   return rawTime - (rawTime % 60);
-}
-
-function displayOffset(tzOffset) {
-  return ((tzOffset > 0) ? '+' : '') + (tzOffset / 60);
 }
 
 function getFirstPart(str) {
@@ -80,6 +74,7 @@ class App extends Component {
     this.updateDimensions = this.updateDimensions.bind(this);
     this.undoRemoveTimezone = this.undoRemoveTimezone.bind(this);
     this.handleMouseMove = this.handleMouseMove.bind(this);
+    this.startDrag = this.startDrag.bind(this);
     this.endDrag = this.endDrag.bind(this);
   }
 
@@ -188,56 +183,30 @@ class App extends Component {
 
   render() {
     if (this.state.seconds === 0) setTimeout(() => this.setState({seconds: 1}), 300);
-    const titleStyle = {marginTop: '-30px', marginBottom: '-30px'};
     const timeZones = this.state.timeZones.map((timeZone, index) => {
-      const tzImg = <ProgressiveImage src={timeZone.imgSrc} placeholder={timeZone.thumbSrc}>
-          {(src) => <img className="leftImg" src={src} alt={timeZone.name}/>}
-        </ProgressiveImage>;
-      const tzDelete = index ? (<ActionDelete 
-        color='#DDD' className='delete'
-        onTouchTap={() => this.removeTimezone(index)}
-        />) : <div/>;
-      const header = <div className={'header col' + (index % 4)}/>;
-      const time = <h1 className='time'><Timestamp time={timeZone.timestamp} format='time' utc={false}/></h1>;
-      const dragged = this.state.dragState.active && this.state.dragState.startIndex === index;
-      const offset = <h3 className='offset'>GMT {displayOffset(timeZone.offset)}</h3>
-      const tzTile = (
-        <GridTile
-            onMouseDown={(e) => {this.startDrag(e.clientX, index); e.preventDefault()}}
-            className={'tz' + (dragged ? ' dragged' : '') + ((this.state.seconds === 0) ? ' pulsed' : '')}
-            key={index} title={time}
-            onTouchTap={() => this.refs.newTz.setState({active: false})}
-            subtitle={<div className='subtitle'>
-              <h1 className='city'>{timeZone.name}</h1>{offset}</div>}
-            titleBackground='rgba(0, 0, 0, 0)'
-            titleStyle={titleStyle}>
-          {header}{tzDelete}{tzImg}
-        </GridTile>);
-      return tzTile;
+      const dragged = (this.state.seconds === 0) 
+          || (this.state.dragState.active && this.state.dragState.startIndex === index);
+      return <Timezone key={index} timeZone={timeZone} index={index} dragged={dragged}
+          onDrag={this.startDrag} onDelete={this.removeTimezone} />;
     });
 
     const removed = this.state.lastDeleted;
     const snackbar = (
       <Snackbar 
         open={this.state.snackbarOpen} 
-        message={removed ? ('Removed ' + getFirstPart(this.state.lastDeleted.name)) : 'Removal undone'}
+        message={removed ? ('Removed ' + getFirstPart(this.state.lastDeleted.name)) 
+                         : 'Removal undone'}
         action={removed && 'undo'}
         autoHideDuration={removed ? 5000 : 1000}
         onActionTouchTap={this.undoRemoveTimezone}
         onRequestClose={() => this.setState({snackbarOpen: false})}
       />);
-    const root = {
-      display: 'flex',
-      flexWrap: 'wrap'
-    }
-    const gridList = {
-      display: 'flex',
-      flexWrap: 'nowrap',
-      overflowX: 'auto',
-    }
+
+    const rootStyle = {display: 'flex', flexWrap: 'wrap'}
+    const gridListStyle = {display: 'flex', flexWrap: 'nowrap', overflowX: 'auto'}
 
     return (
-      <div style={root}>
+      <div style={rootStyle}>
         <MuiThemeProvider>
           <Welcome
               onClose={() => this.setState({welcomeDismissed: true})}
@@ -245,7 +214,7 @@ class App extends Component {
         </MuiThemeProvider>
         <MuiThemeProvider>
           <GridList cellHeight={this.state.height} cols={2.2} padding={0}
-              style={gridList}
+              style={gridListStyle}
               id='gridList'
               className='condensed'
               onMouseUp={this.endDrag}
