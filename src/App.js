@@ -4,6 +4,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import ActionDelete from 'material-ui/svg-icons/action/delete';
 import Snackbar from 'material-ui/Snackbar';
 import {GridList, GridTile} from 'material-ui/GridList';
+import ProgressiveImage from 'react-progressive-image';
 import Geo from './Geo';
 import NewTimezone from './NewTimezone';
 import Welcome from './Welcome';
@@ -15,10 +16,11 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 
 const localKey = 'timeZones';
+const placeholderImg = 'grey.png';
 const initialTimezones = [{
   name: '',
   offset: 0 - new Date().getTimezoneOffset(),
-  imgSrc: null
+  imgSrc: placeholderImg
 }];
 
 function getTimeAtOffset(offset) {
@@ -111,9 +113,10 @@ class App extends Component {
   populateImages() {
     const timeZones = this.state.timeZones.slice();
     for (var timeZone of timeZones) {
-      if (!timeZone.imgSrc) ((timeZone) => {
-        this.imageFetch.getImageUrl(getFirstPart(timeZone.name), (imgUrl) => {
+      if (!timeZone.imgSrc || timeZone.imgSrc === placeholderImg) ((timeZone) => {
+        this.imageFetch.getImageUrl(getFirstPart(timeZone.name), (imgUrl, thumbUrl) => {
           timeZone.imgSrc = imgUrl;
+          timeZone.thumbSrc = thumbUrl;
           this.setState({timeZones: timeZones}, this.updateLocalStorage);
         });
       })(timeZone);
@@ -130,7 +133,7 @@ class App extends Component {
 
   handleNewCity(city) {
     const newTz = {
-      name: city.text, offset: city.value.utcOffset, imgSrc: null
+      name: city.text, offset: city.value.utcOffset, imgSrc: placeholderImg
     };
     this.setState({
       timeZones: this.state.timeZones.concat(newTz)}, () => {
@@ -187,8 +190,9 @@ class App extends Component {
     if (this.state.seconds === 0) setTimeout(() => this.setState({seconds: 1}), 300);
     const titleStyle = {marginTop: '-30px', marginBottom: '-30px'};
     const timeZones = this.state.timeZones.map((timeZone, index) => {
-      const tzImg = <img alt={timeZone.name} src={timeZone.imgSrc} className="leftImg" 
-          onError={(e) => this.reloadImage(index)} />;
+      const tzImg = <ProgressiveImage src={timeZone.imgSrc} placeholder={timeZone.thumbSrc}>
+          {(src) => <img className="leftImg" src={src} alt={timeZone.name}/>}
+        </ProgressiveImage>;
       const tzDelete = index ? (<ActionDelete 
         color='#DDD' className='delete'
         onTouchTap={() => this.removeTimezone(index)}

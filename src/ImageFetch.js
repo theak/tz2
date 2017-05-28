@@ -25,9 +25,11 @@ export default class ImageFetch {
   getImageUrl(cityName, callback) {
     this._getImageRequest(cityName).then((response) => {
       const hits = response.data.hits;
-      const imgSrc = hits.length 
+      const imgSrc = hits.length
           && hits[0].webformatURL.replace('_640', '_960');
-      callback(imgSrc);
+      const thumbSrc = hits.length 
+          && hits[0].webformatURL.replace('_640', '_180');
+      callback(imgSrc, thumbSrc);
     });
   }
 
