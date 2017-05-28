@@ -6,6 +6,7 @@ import Snackbar from 'material-ui/Snackbar';
 import {GridList, GridTile} from 'material-ui/GridList';
 import Geo from './Geo';
 import NewTimezone from './NewTimezone';
+import Welcome from './Welcome';
 import ImageFetch from './ImageFetch';
 import Ticker from './Ticker';
 import './App.css';
@@ -46,9 +47,13 @@ class App extends Component {
     super();
     const lastTimezones = localStorage.getItem(localKey);
     let timeZones = initialTimezones;
+    this.returnVisit = false;
     if (lastTimezones) {
       const lastTimezonesArr = JSON.parse(lastTimezones);
-      if (lastTimezonesArr.length > 0) timeZones = lastTimezonesArr;
+      if (lastTimezonesArr.length > 0) {
+        timeZones = lastTimezonesArr;
+        this.returnVisit = true;
+      }
     }
 
     this.state = {
@@ -57,7 +62,8 @@ class App extends Component {
       timeZones: timeZones,
       seconds: Math.floor(new Date().getSeconds()),
       snackbarOpen: false,
-      dragState: {active: false}
+      dragState: {active: false},
+      welcomeDismissed: this.returnVisit
     };
     this.imageFetch = new ImageFetch();
 
@@ -229,6 +235,11 @@ class App extends Component {
     return (
       <div style={root}>
         <MuiThemeProvider>
+          <Welcome
+              onClose={() => this.setState({welcomeDismissed: true})}
+              open={!this.state.welcomeDismissed}/>
+        </MuiThemeProvider>
+        <MuiThemeProvider>
           <GridList cellHeight={this.state.height} cols={2.2} padding={0}
               style={gridList}
               id='gridList'
@@ -238,7 +249,7 @@ class App extends Component {
             {timeZones}
             <NewTimezone
               ref='newTz'
-              education={this.state.timeZones.length < 2}
+              education={(this.state.timeZones.length < 2) && this.state.welcomeDismissed}
               onAddCity={this.handleNewCity}/>
           </GridList>
         </MuiThemeProvider>

@@ -1,3 +1,9 @@
+.welcome>div>div>div {
+  padding: 10px;
+}
+.screenshot {
+  padding: 30px;
+}
 .leftImg {
   left: 0% !important;
   width: 100% !important;
