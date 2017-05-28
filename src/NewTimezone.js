@@ -1,14 +1,15 @@
 import React, {Component} from 'react';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
+import ExpandLess from 'material-ui/svg-icons/navigation/expand-less';
 import {GridTile} from 'material-ui/GridList';
 import CityAutoComplete from './CityAutoComplete';
 import './NewTimezone.css';
 
 export default class NewTimezone extends Component {
-  constructor() {
-    super();
-    this.state = {active: false};
+  constructor(props) {
+    super(props);
+    this.state = {active: false, education: props.education};
     this.handleTap = this.handleTap.bind(this);
     this.onSelect = this.onSelect.bind(this);
     this.onBlur = this.onBlur.bind(this);
@@ -20,7 +21,7 @@ export default class NewTimezone extends Component {
 
   onSelect(value) {
     this.props.onAddCity(value);
-    this.setState({active: false});
+    this.setState({active: false, education: false});
   }
 
   onBlur() {
@@ -35,11 +36,16 @@ export default class NewTimezone extends Component {
     let content = (<div>
         <div className='fabWrapper' style={this.displayStyle(!this.state.active)}>
           <FloatingActionButton 
-              className='add' onTouchTap={this.handleTap}
+              className={'add' + (this.state.education ? ' education' : '')}
+              onTouchTap={this.handleTap}
               backgroundColor='#1565c0'>
             <ContentAdd />
           </FloatingActionButton>
-          <p><b>ADD LOCATION</b></p>
+          <p className='instructions' style={this.displayStyle(!this.state.education)}><b>ADD LOCATION</b></p>
+          <div className='instructions' style={this.displayStyle(this.state.education)}>
+            <ExpandLess className='arrow'/>
+            <br/>Add a new city to your world clock
+          </div>
         </div>
         <div style={this.displayStyle(this.state.active)} className='inputWrapper'>
           <CityAutoComplete ref='cityName' onSelect={this.onSelect}

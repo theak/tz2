@@ -2,6 +2,7 @@
   position: fixed !important;
   bottom: 0px;
   opacity: 0;
+  height: 6px !important;
   transition: opacity ease 0.5s;
   box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
 }
@@ -9,5 +10,5 @@
   opacity: 1;
 }
 .ticker>div {
-  transition: width 0.2s cubic-bezier(.4,2.08,.55,.44) !important;
+  transition: width 0.3s cubic-bezier(.4,2.08,.55,.44) !important;
 }

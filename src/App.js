@@ -77,7 +77,7 @@ class App extends Component {
 
   componentDidMount() {
     this.updateTime();
-    
+
     window.addEventListener('resize', this.updateDimensions);
     this.updateInterval = setInterval(() => this.updateTime(), 1000);
     if (window.jQuery) window.jQuery('#gridList').mousewheel((event, delta) => {
@@ -233,7 +233,10 @@ class App extends Component {
               onMouseUp={this.endDrag}
               onMouseMove={this.handleMouseMove}>
             {timeZones}
-            <NewTimezone ref='newTz' onAddCity={this.handleNewCity}/>
+            <NewTimezone
+              ref='newTz'
+              education={this.state.timeZones.length < 2}
+              onAddCity={this.handleNewCity}/>
           </GridList>
         </MuiThemeProvider>
         <MuiThemeProvider>{snackbar}</MuiThemeProvider>
