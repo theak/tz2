@@ -41,7 +41,7 @@ export default class Welcome extends React.Component {
               alt='Screenshot'
               className='screenshot'
               src='/screenshot.png' width='343'/></div>
-          Your cities are saved locally and will appear whenever you visit iwantmytime.com on this computer.
+          Your cities are saved locally and will appear whenever you visit iWantTheTime.com on this computer.
         </Dialog>
       </div>
     );
