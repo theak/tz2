@@ -1,19 +1,19 @@
 @font-face {
     font-family: 'weather';
-    src: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/93/artill_clean_icons-webfont.eot');
-    src: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/93/artill_clean_icons-webfont.eot?#iefix') format('embedded-opentype'),
-         url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/93/artill_clean_icons-webfont.woff') format('woff'),
-         url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/93/artill_clean_icons-webfont.ttf') format('truetype'),
-         url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/93/artill_clean_icons-webfont.svg#artill_clean_weather_iconsRg') format('svg');
+    src: url('/wf/artill_clean_icons-webfont.eot');
+    src: url('/wf/artill_clean_icons-webfont.eot?#iefix') format('embedded-opentype'),
+         url('/wf/artill_clean_icons-webfont.woff') format('woff'),
+         url('/wf/artill_clean_icons-webfont.ttf') format('truetype'),
+         url('/wf/artill_clean_icons-webfont.svg#artill_clean_weather_iconsRg') format('svg');
     font-weight: normal;
     font-style: normal;
 }
 
 .weather {
-  width: 120px;
+  width: 100px;
   height: 80px;
   position: absolute;
-  top: 165px;
+  top: 160px;
   right: 30px;
   background-color: #FAFAFA;
   border-radius: 3px;
