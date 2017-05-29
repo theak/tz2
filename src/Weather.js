@@ -9,10 +9,6 @@ export default class Weather extends Component {
     this.updateWeather = this.updateWeather.bind(this);
   }
 
-  componentDidMount() {
-    this.updateWeather();
-  }
-
   updateWeather() {
     if (window && window.jQuery && window.jQuery.simpleWeather) {
       const simpleWeather = window.jQuery.simpleWeather;
@@ -27,8 +23,11 @@ export default class Weather extends Component {
     }
   }
   render() {
-    if (!this.state.weather) return <div/>
     const weather = this.state.weather;
+    if (!weather) {
+      if (this.props.location) this.updateWeather();
+      return <div/>;
+    }
     return (
       <div className='weather'>
         <div className='iconWrapper'><i className={'icon-' + weather.code}></i></div>
