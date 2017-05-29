@@ -18,7 +18,8 @@ const initialTimezones = [{
   name: '',
   offset: 0 - new Date().getTimezoneOffset(),
   imgIndex: 0,
-  photos: [{imgUrl: placeholderImg}]
+  photos: [{imgUrl: placeholderImg}],
+  units: 'f'
 }];
 
 function getTimeAtOffset(offset) {
@@ -74,6 +75,7 @@ class App extends Component {
 
     this.handleNewCity = this.handleNewCity.bind(this);
     this.handleChangeImage = this.handleChangeImage.bind(this);
+    this.handleToggleUnits = this.handleToggleUnits.bind(this);
     this.removeTimezone = this.removeTimezone.bind(this);
     this.updateDimensions = this.updateDimensions.bind(this);
     this.undoRemoveTimezone = this.undoRemoveTimezone.bind(this);
@@ -129,6 +131,15 @@ class App extends Component {
     this.setState({timeZones: timeZones}, this.updateLocalStorage);
   }
 
+  handleToggleUnits(callback) {
+    const timeZones = this.state.timeZones.slice();
+    timeZones[0].units = (timeZones[0].units === 'f') ? 'c' : 'f';
+    this.setState({timeZones: timeZones}, () => {
+      callback();
+      this.updateLocalStorage();
+    });
+  }
+
   startDrag(clientX, clientIndex) {
     if (clientIndex) this.setState({dragState: 
         {active: true, startX: clientX, startIndex: clientIndex}});
@@ -179,7 +190,9 @@ class App extends Component {
       const dragged = (this.state.seconds === 0) 
           || (this.state.dragState.active && this.state.dragState.startIndex === index);
       return <Timezone key={index} timeZone={timeZone} index={index}
-          dragged={dragged} onChangeImage={this.handleChangeImage} 
+          units={this.state.timeZones.length && this.state.timeZones[0].units}
+          onToggleUnits={this.handleToggleUnits}
+          dragged={dragged} onChangeImage={this.handleChangeImage}
           onDrag={this.startDrag} onDelete={this.removeTimezone} />;
     });
 

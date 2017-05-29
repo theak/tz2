@@ -64,7 +64,7 @@
 }
 .tz.dragged,.tz.pulsed {opacity: 0.7}
 
-.tz>div:not(.delete) {
+.tz>div:not(.delete):not(.weather) {
   top: 30px !important;
   bottom: initial !important;
 }

@@ -5,6 +5,7 @@ import KeyboardArrowLeft from 'material-ui/svg-icons/hardware/keyboard-arrow-lef
 import {GridTile} from 'material-ui/GridList';
 import ProgressiveImage from 'react-progressive-image';
 import Timestamp from 'react-timestamp';
+import Weather from './Weather';
 
 const titleStyle = {marginTop: '-30px', marginBottom: '-30px'};
 
@@ -58,6 +59,7 @@ export default function Timezone(props) {
         titleBackground='rgba(0, 0, 0, 0)'
         titleStyle={titleStyle}>
       {header} {tzDelete} {tzImg}
+      <Weather location={timeZone.name} units={props.units} onToggleUnits={props.onToggleUnits} />
       {leftArrow} {rightArrow}
     </GridTile>);
 }
