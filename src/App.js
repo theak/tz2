@@ -68,10 +68,12 @@ class App extends Component {
       timeZones[0].name = city;
       geo.getPhotosForCity(city, (photos) => {
         timeZones[0].photos = photos;
+        this.updateLocalStorage();
       })
     });
 
     this.handleNewCity = this.handleNewCity.bind(this);
+    this.handleChangeImage = this.handleChangeImage.bind(this);
     this.removeTimezone = this.removeTimezone.bind(this);
     this.updateDimensions = this.updateDimensions.bind(this);
     this.undoRemoveTimezone = this.undoRemoveTimezone.bind(this);
@@ -117,7 +119,14 @@ class App extends Component {
     this.setState({
       timeZones: this.state.timeZones.concat(newTz)}, () => {
         this.updateTime();
+        this.updateLocalStorage();
       });
+  }
+
+  handleChangeImage(tzIndex, imgIndex) {
+    const timeZones = this.state.timeZones.slice();
+    timeZones[tzIndex].imgIndex = imgIndex;
+    this.setState({timeZones: timeZones}, this.updateLocalStorage);
   }
 
   startDrag(clientX, clientIndex) {
@@ -169,7 +178,8 @@ class App extends Component {
     const timeZones = this.state.timeZones.map((timeZone, index) => {
       const dragged = (this.state.seconds === 0) 
           || (this.state.dragState.active && this.state.dragState.startIndex === index);
-      return <Timezone key={index} timeZone={timeZone} index={index} dragged={dragged}
+      return <Timezone key={index} timeZone={timeZone} index={index}
+          dragged={dragged} onChangeImage={this.handleChangeImage} 
           onDrag={this.startDrag} onDelete={this.removeTimezone} />;
     });
 
