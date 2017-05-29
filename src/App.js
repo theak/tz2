@@ -6,7 +6,6 @@ import Geo from './Geo';
 import Timezone from './Timezone';
 import NewTimezone from './NewTimezone';
 import Welcome from './Welcome';
-import ImageFetch from './ImageFetch';
 import Ticker from './Ticker';
 import './App.css';
 import injectTapEventPlugin from 'react-tap-event-plugin';
@@ -61,16 +60,19 @@ class App extends Component {
       dragState: {active: false},
       welcomeDismissed: this.returnVisit
     };
-    this.imageFetch = new ImageFetch();
 
     const geo = new Geo();
     geo.getCity((city) => {
       const timeZones = this.state.timeZones.slice();
       timeZones[0].name = city;
-      this.setState({timeZones: timeZones}, () => {this.populateImages()});
+      geo.getPhotoForCity(city, (photo) => {
+        timeZones[0].imgSrc = photo.imgUrl;
+        timeZones[0].thumbSrc = photo.thumbUrl;
+      })
     });
 
     this.handleNewCity = this.handleNewCity.bind(this);
+    this.removeTimezone = this.removeTimezone.bind(this);
     this.updateDimensions = this.updateDimensions.bind(this);
     this.undoRemoveTimezone = this.undoRemoveTimezone.bind(this);
     this.handleMouseMove = this.handleMouseMove.bind(this);
@@ -105,35 +107,16 @@ class App extends Component {
     localStorage.setItem(localKey, JSON.stringify(this.state.timeZones));
   }
 
-  populateImages() {
-    const timeZones = this.state.timeZones.slice();
-    for (var timeZone of timeZones) {
-      if (!timeZone.imgSrc || timeZone.imgSrc === placeholderImg) ((timeZone) => {
-        this.imageFetch.getImageUrl(getFirstPart(timeZone.name), (imgUrl, thumbUrl) => {
-          timeZone.imgSrc = imgUrl;
-          timeZone.thumbSrc = thumbUrl;
-          this.setState({timeZones: timeZones}, this.updateLocalStorage);
-        });
-      })(timeZone);
-    }
-  }
-
-  reloadImage(index) {
-    const timeZones = this.state.timeZones.slice();
-    if (timeZones[index].reloaded) return;
-    timeZones[index].imgSrc = null;
-    timeZones[index].reloaded = true;
-    this.setState({timeZones: timeZones}, this.populateImages);
-  }
-
   handleNewCity(city) {
     const newTz = {
-      name: city.text, offset: city.value.utcOffset, imgSrc: placeholderImg
+      name: city.text, 
+      offset: city.value.utcOffset, 
+      imgSrc: city.value.photo.imgUrl, 
+      thumbSrc: city.value.photo.thumbUrl
     };
     this.setState({
       timeZones: this.state.timeZones.concat(newTz)}, () => {
         this.updateTime();
-        this.populateImages();
       });
   }
 

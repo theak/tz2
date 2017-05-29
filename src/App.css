@@ -7,7 +7,7 @@
 .leftImg {
   left: 0% !important;
   width: 100% !important;
-  filter: saturate(80%);
+  filter: saturate(110%);
   flex: 1 1 auto !important;
   object-fit: cover !important;
 }

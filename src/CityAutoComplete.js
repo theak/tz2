@@ -25,7 +25,9 @@ export default class CityAutoComplete extends Component {
     //Value was selected
     if (suggestion) {
       this.geo.getDetails(suggestion.value.placeId, (response)=> {
+        console.log(response);
         suggestion.value.utcOffset = response.utc_offset;
+        suggestion.value.photo = response.photo;
         this.props.onSelect(suggestion);
         this.clear();
       });

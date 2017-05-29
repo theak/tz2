@@ -20,7 +20,8 @@ export default class Geo {
       if (typeof window === 'undefined') return;
       var googleMaps = (window.google && window.google.maps);
       this.autocompleteService = new googleMaps.places.AutocompleteService();
-      this.placesService = new googleMaps.places.PlacesService(document.createElement('div'));
+      this.placesService = new googleMaps.places.PlacesService(
+        document.createElement('div'));
       this.types = ['(cities)'];
       this.bounds = new googleMaps.LatLngBounds(
         new googleMaps.LatLng(-90, -180),
@@ -38,8 +39,20 @@ export default class Geo {
     }, callback);
   }
 
+  selectPhoto(photos) {
+    const photo = photos[0];
+    const height = (window.innerHeight) * window.devicePixelRatio;
+    const width = Math.floor(photo.width / photo.height * height);
+    const imgUrl = photo.getUrl({maxWidth: width, maxHeight: height});
+    const thumbUrl = photo.getUrl({maxWidth: 128, maxHeight: 128});
+    return {thumbUrl: thumbUrl, imgUrl: imgUrl};
+  }
+
   getDetails(placeId, callback) {
-    return this.placesService.getDetails({placeId: placeId}, callback)
+    return this.placesService.getDetails({placeId: placeId}, (response)=> {
+        callback({utc_offset: response.utc_offset,
+                  photo: this.selectPhoto(response.photos)});
+      });
   }
 
   getPrediction(text, value) {
@@ -65,6 +78,16 @@ export default class Geo {
               + ', ' + json.geoplugin_countryName);
           callback(main_text + ', ' + secondary_text);
         });
+  }
+
+  getPhotoForCity(city, callback) {
+    this.getCities(city, (predictions, status) => {
+      if (predictions && predictions.length) {
+        this.getDetails(predictions[0].place_id, (response) => {
+          callback(response.photo);
+        });
+      }
+    });
   }
 
 }
