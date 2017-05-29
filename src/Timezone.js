@@ -41,14 +41,12 @@ export default function Timezone(props) {
           }}
           className='tzbtn imgArrow' />
       : <div/>;
-  const rightArrow = (timeZone.imgIndex < (timeZone.photos.length - 1))
-      ? <KeyboardArrowRight color='#DDD'
+  const rightArrow = <KeyboardArrowRight color='#DDD'
           onMouseDown={(e) => e.stopPropagation()}
           onTouchTap={(event) => {
-            props.onChangeImage(index, timeZone.imgIndex + 1);
+            props.onChangeImage(index, (timeZone.imgIndex + 1) % timeZone.photos.length);
           }}
           className='tzbtn imgArrow rightArrow' />
-      : <div/>;
   return (
     <GridTile
         onMouseDown={(e) => {props.onDrag(e.clientX, index); e.preventDefault()}}
