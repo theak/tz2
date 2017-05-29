@@ -185,10 +185,9 @@ class App extends Component {
   }
 
   render() {
-    if (this.state.seconds === 0) setTimeout(() => this.setState({seconds: 1}), 300);
     const timeZones = this.state.timeZones.map((timeZone, index) => {
-      const dragged = (this.state.seconds === 0) 
-          || (this.state.dragState.active && this.state.dragState.startIndex === index);
+      const dragged = (this.state.dragState.active
+          && this.state.dragState.startIndex === index);
       return <Timezone key={index} timeZone={timeZone} index={index}
           units={this.state.timeZones.length && this.state.timeZones[0].units}
           onToggleUnits={this.handleToggleUnits}
