@@ -39,19 +39,21 @@ export default class Geo {
     }, callback);
   }
 
-  selectPhoto(photos) {
-    const photo = photos[0];
+  getPhotos(photos) {
     const height = (window.innerHeight) * window.devicePixelRatio;
-    const width = Math.floor(photo.width / photo.height * height);
-    const imgUrl = photo.getUrl({maxWidth: width, maxHeight: height});
-    const thumbUrl = photo.getUrl({maxWidth: 128, maxHeight: 128});
-    return {thumbUrl: thumbUrl, imgUrl: imgUrl};
+    return photos.map((photo) => {
+      const width = Math.floor(photo.width / photo.height * height);
+      const imgUrl = photo.getUrl({maxWidth: width, maxHeight: height});
+      const thumbUrl = photo.getUrl({maxWidth: 128, maxHeight: 128});
+      return {thumbUrl: thumbUrl, imgUrl: imgUrl};
+    });
   }
 
   getDetails(placeId, callback) {
     return this.placesService.getDetails({placeId: placeId}, (response)=> {
+        const photos = this.getPhotos(response.photos);
         callback({utc_offset: response.utc_offset,
-                  photo: this.selectPhoto(response.photos)});
+                  photos: photos});
       });
   }
 
@@ -80,11 +82,11 @@ export default class Geo {
         });
   }
 
-  getPhotoForCity(city, callback) {
+  getPhotosForCity(city, callback) {
     this.getCities(city, (predictions, status) => {
       if (predictions && predictions.length) {
         this.getDetails(predictions[0].place_id, (response) => {
-          callback(response.photo);
+          callback(response.photos);
         });
       }
     });

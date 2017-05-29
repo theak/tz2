@@ -15,10 +15,14 @@ export default function Timezone(props) {
   const timeZone = props.timeZone;
   const index = props.index;
   const dragged = props.dragged;
-  const tzImg = <ProgressiveImage src={timeZone.imgSrc} placeholder={timeZone.thumbSrc}>
+  const photo = timeZone.photos[timeZone.imgIndex || 0];
+  const tzImg = (
+    <ProgressiveImage src={photo.imgUrl} placeholder={photo.thumbUrl}>
       {(src) => <img className="leftImg" src={src} alt={timeZone.name}/>}
-    </ProgressiveImage>;
-  const tzDelete = index ? (<ActionDelete 
+    </ProgressiveImage>
+  );
+  const tzDelete = index ? (
+    <ActionDelete 
       color='#DDD' className='delete'
       onTouchTap={() => props.onDelete(index)}
     />) : <div/>;
@@ -26,14 +30,15 @@ export default function Timezone(props) {
   const time = <h1 className='time'>
       <Timestamp time={timeZone.timestamp} format='time' utc={false}/></h1>;
   const offset = <h3 className='offset'>GMT {displayOffset(timeZone.offset)}</h3>;
-  return (<GridTile
-            onMouseDown={(e) => {props.onDrag(e.clientX, index); e.preventDefault()}}
-            className={'tz' + (dragged ? ' dragged' : '')}
-            key={index} title={time}
-            subtitle={<div className='subtitle'>
-              <h1 className='city'>{timeZone.name}</h1>{offset}</div>}
-            titleBackground='rgba(0, 0, 0, 0)'
-            titleStyle={titleStyle}>
-          {header}{tzDelete}{tzImg}
-        </GridTile>);
+  return (
+    <GridTile
+        onMouseDown={(e) => {props.onDrag(e.clientX, index); e.preventDefault()}}
+        className={'tz' + (dragged ? ' dragged' : '')}
+        key={index} title={time}
+        subtitle={<div className='subtitle'>
+          <h1 className='city'>{timeZone.name}</h1>{offset}</div>}
+        titleBackground='rgba(0, 0, 0, 0)'
+        titleStyle={titleStyle}>
+      {header}{tzDelete}{tzImg}
+    </GridTile>);
 }

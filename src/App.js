@@ -17,7 +17,8 @@ const placeholderImg = 'grey.png';
 const initialTimezones = [{
   name: '',
   offset: 0 - new Date().getTimezoneOffset(),
-  imgSrc: placeholderImg
+  imgIndex: 0,
+  photos: [{imgUrl: placeholderImg}]
 }];
 
 function getTimeAtOffset(offset) {
@@ -65,9 +66,8 @@ class App extends Component {
     geo.getCity((city) => {
       const timeZones = this.state.timeZones.slice();
       timeZones[0].name = city;
-      geo.getPhotoForCity(city, (photo) => {
-        timeZones[0].imgSrc = photo.imgUrl;
-        timeZones[0].thumbSrc = photo.thumbUrl;
+      geo.getPhotosForCity(city, (photos) => {
+        timeZones[0].photos = photos;
       })
     });
 
@@ -110,9 +110,9 @@ class App extends Component {
   handleNewCity(city) {
     const newTz = {
       name: city.text, 
-      offset: city.value.utcOffset, 
-      imgSrc: city.value.photo.imgUrl, 
-      thumbSrc: city.value.photo.thumbUrl
+      offset: city.value.utcOffset,
+      photos: city.value.photos,
+      imgIndex: 0
     };
     this.setState({
       timeZones: this.state.timeZones.concat(newTz)}, () => {
