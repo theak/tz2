@@ -9,15 +9,21 @@ export default class Weather extends Component {
     this.updateWeather = this.updateWeather.bind(this);
   }
 
-  updateWeather() {
+  componentWillReceiveProps(nextProps) {
+    if (this.props.units !== nextProps.units) {
+      this.updateWeather(nextProps);
+    }
+  }
+
+  updateWeather(props=this.props) {
     if (window && window.jQuery && window.jQuery.simpleWeather) {
       const simpleWeather = window.jQuery.simpleWeather;
       simpleWeather({
-        location: this.props.location,
+        location: props.location,
         woeid: '',
-        unit: this.props.units,
+        unit: props.units,
         success: (weather) => {
-          this.setState({weather: weather, renderedUnits: this.props.units});
+          this.setState({weather: weather, renderedUnits: props.units});
         }
       });
     }
@@ -32,6 +38,7 @@ export default class Weather extends Component {
       <div className='weather'>
         <div className='iconWrapper'><i className={'icon-' + weather.code}></i></div>
         <div className='weatherText'
+            onMouseDown={(e) => e.stopPropagation() }
             onTouchTap={() => {
               this.props.onToggleUnits(this.updateWeather);
             }}>
