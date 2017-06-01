@@ -39,6 +39,10 @@ function move(arr, old_index, new_index) {
   return out;
 };
 
+function hasKeys(obj, keys) {
+  return keys.every((key) => key in obj);
+}
+
 class App extends Component {
   constructor() {
     super();
@@ -47,7 +51,8 @@ class App extends Component {
     this.returnVisit = false;
     if (lastTimezones) {
       const lastTimezonesArr = JSON.parse(lastTimezones);
-      if (lastTimezonesArr.length > 0) {
+      if (lastTimezonesArr.length > 0 
+          && hasKeys(lastTimezonesArr[0], Object.keys(initialTimezones[0]))) {
         timeZones = lastTimezonesArr;
         this.returnVisit = true;
       }
@@ -63,7 +68,7 @@ class App extends Component {
       welcomeDismissed: this.returnVisit
     };
 
-    if (!this.state.timeZones[0].name 
+    if (!this.state.timeZones[0].name || !this.state.timeZones[0].photos
         || (this.state.timeZones[0].photos.length === 0)) {
       const geo = new Geo();
       geo.getCity((city) => {
