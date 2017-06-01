@@ -1,7 +1,6 @@
 import fetchJsonp from 'fetch-jsonp';
 
-const GEOLOC_URL = 'https://ip.iwantthetime.com/json.gp?ip=' 
-    + (window && window.clientIp);
+const GEOLOC_URL = 'https://ip.iwantthetime.com/json.gp?ip=';
 
 let instance = null;
 
@@ -72,7 +71,7 @@ export default class Geo {
   }
 
   getCity(callback) {
-    fetchJsonp(GEOLOC_URL, {jsonpCallback: 'jsoncallback'})
+    fetchJsonp(GEOLOC_URL + window.clientIp, {jsonpCallback: 'jsoncallback'})
         .then((response) => {return response.json()})
         .then((json) => {
           const main_text = json.geoplugin_city;

@@ -15,7 +15,7 @@ injectTapEventPlugin();
 const localKey = 'timeZones';
 const placeholderImg = 'grey.png';
 const initialTimezones = [{
-  name: '',
+  name: null,
   offset: 0 - new Date().getTimezoneOffset(),
   imgIndex: 0,
   photos: [{imgUrl: placeholderImg}],
@@ -63,15 +63,18 @@ class App extends Component {
       welcomeDismissed: this.returnVisit
     };
 
-    const geo = new Geo();
-    geo.getCity((city) => {
-      const timeZones = this.state.timeZones.slice();
-      timeZones[0].name = city;
-      geo.getPhotosForCity(city, (photos) => {
-        timeZones[0].photos = photos;
-        this.updateLocalStorage();
-      })
-    });
+    if (!this.state.timeZones[0].name 
+        || (this.state.timeZones[0].photos.length === 0)) {
+      const geo = new Geo();
+      geo.getCity((city) => {
+        const timeZones = this.state.timeZones.slice();
+        timeZones[0].name = city;
+        geo.getPhotosForCity(city, (photos) => {
+          timeZones[0].photos = photos;
+          this.updateLocalStorage();
+        })
+      });
+    }
 
     this.handleNewCity = this.handleNewCity.bind(this);
     this.handleChangeImage = this.handleChangeImage.bind(this);
