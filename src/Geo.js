@@ -77,7 +77,8 @@ export default class Geo {
           const main_text = json.geoplugin_city;
           const secondary_text = _simplifySecondary(json.geoplugin_region 
               + ', ' + json.geoplugin_countryName);
-          callback(main_text + ', ' + secondary_text);
+          if (!main_text) callback(null);
+          else callback(main_text + ', ' + secondary_text);
         });
   }
 

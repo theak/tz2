@@ -3,29 +3,24 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import ExpandLess from 'material-ui/svg-icons/navigation/expand-less';
 import {GridTile} from 'material-ui/GridList';
-import CityAutoComplete from './CityAutoComplete';
+import NewTimezoneDialog from './NewTimezoneDialog';
 import './NewTimezone.css';
 
 export default class NewTimezone extends Component {
   constructor(props) {
     super(props);
-    this.state = {active: false, education: props.education};
+    this.state = {education: props.education};
     this.handleTap = this.handleTap.bind(this);
     this.onSelect = this.onSelect.bind(this);
-    this.onBlur = this.onBlur.bind(this);
   }
 
   handleTap() {
-    this.setState({active: true});
+    this.refs.newTimezoneDialog.open();
   }
 
   onSelect(value) {
     this.props.onAddCity(value);
-    this.setState({active: false, education: false});
-  }
-
-  onBlur() {
-    this.setState({active: false});
+    this.setState({education: false});
   }
 
   displayStyle(isVisible) {
@@ -34,7 +29,7 @@ export default class NewTimezone extends Component {
 
   render() {
     let content = (<div>
-        <div className='fabWrapper' style={this.displayStyle(!this.state.active)}>
+        <div className='fabWrapper'>
           <FloatingActionButton 
               className={'add' + (this.state.education ? ' education' : '')}
               onTouchTap={this.handleTap}
@@ -47,17 +42,11 @@ export default class NewTimezone extends Component {
             <br/>Add a new city to your world clock
           </div>
         </div>
-        <div style={this.displayStyle(this.state.active)} className='inputWrapper'>
-          <CityAutoComplete ref='cityName' onSelect={this.onSelect}
-              onBlur={this.onBlur} />
-        </div>
+        <NewTimezoneDialog 
+            ref='newTimezoneDialog'
+            title='Add new timezone'
+            onSelect={this.onSelect} />
       </div>);
-    if (!this.state.active) {
-      if (this.focusTimeout) clearTimeout(this.focusTimeout);
-    } else {
-      this.focusTimeout = setTimeout(() => { this.refs.cityName.focus() }, 50);
-    }
-
     return (
       <GridTile key='new'>{content}</GridTile>
     );

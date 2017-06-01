@@ -103,3 +103,6 @@
     min-width: 300px;
   }
 }
+#gridList>div:last-child {
+  width: 200px !important;
+}

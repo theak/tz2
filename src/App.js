@@ -5,6 +5,7 @@ import {GridList} from 'material-ui/GridList';
 import Geo from './Geo';
 import Timezone from './Timezone';
 import NewTimezone from './NewTimezone';
+import NewTimezoneDialog from './NewTimezoneDialog';
 import Welcome from './Welcome';
 import Ticker from './Ticker';
 import './App.css';
@@ -68,22 +69,11 @@ class App extends Component {
       welcomeDismissed: this.returnVisit
     };
 
-    if (!this.state.timeZones[0].name || !this.state.timeZones[0].photos
-        || (this.state.timeZones[0].photos.length === 0)) {
-      const geo = new Geo();
-      geo.getCity((city) => {
-        const timeZones = this.state.timeZones.slice();
-        timeZones[0].name = city;
-        geo.getPhotosForCity(city, (photos) => {
-          timeZones[0].photos = photos;
-          this.updateLocalStorage();
-        })
-      });
-    }
-
+    this.geo = new Geo();
     this.handleNewCity = this.handleNewCity.bind(this);
     this.handleChangeImage = this.handleChangeImage.bind(this);
     this.handleToggleUnits = this.handleToggleUnits.bind(this);
+    this.handleHomeCity = this.handleHomeCity.bind(this);
     this.removeTimezone = this.removeTimezone.bind(this);
     this.updateDimensions = this.updateDimensions.bind(this);
     this.undoRemoveTimezone = this.undoRemoveTimezone.bind(this);
@@ -94,6 +84,11 @@ class App extends Component {
 
   componentDidMount() {
     this.updateTime();
+
+    if (!this.state.timeZones[0].name || !this.state.timeZones[0].photos
+        || (this.state.timeZones[0].photos.length === 0)) {
+      this.geo.getCity(this.handleHomeCity);
+    }
 
     window.addEventListener('resize', this.updateDimensions);
     this.updateInterval = setInterval(() => this.updateTime(), 1000);
@@ -131,6 +126,26 @@ class App extends Component {
         this.updateTime();
         this.updateLocalStorage();
       });
+  }
+
+  askForHomeCity() {
+    if (this.state.welcomeDismissed) this.refs.homeCityDialog.open();
+    else this.setState({askForHomeCity: true});
+  }
+
+  handleHomeCity(city) {
+    if (!city) {
+      this.askForHomeCity();
+      return;
+    }
+    const timeZones = this.state.timeZones.slice();
+    timeZones[0].name = city;
+    this.setState({timeZones: timeZones});
+    this.geo.getPhotosForCity(city, (photos) => {
+      timeZones[0].photos = photos;
+      this.setState({timeZones: timeZones});
+      this.updateLocalStorage();
+    });
   }
 
   handleChangeImage(tzIndex, imgIndex) {
@@ -222,8 +237,16 @@ class App extends Component {
       <div style={rootStyle}>
         <MuiThemeProvider>
           <Welcome
-              onClose={() => this.setState({welcomeDismissed: true})}
+              onClose={() => this.setState({welcomeDismissed: true}, () => {
+                  if (this.state.askForHomeCity) this.askForHomeCity();
+                })}
               open={!this.state.welcomeDismissed}/>
+        </MuiThemeProvider>
+        <MuiThemeProvider>
+          <NewTimezoneDialog
+            ref='homeCityDialog'
+            title='To get started, enter your home city'
+            onSelect={(city) => this.handleHomeCity(city.text)} />
         </MuiThemeProvider>
         <MuiThemeProvider>
           <GridList cellHeight={this.state.height} cols={2.2} padding={0}

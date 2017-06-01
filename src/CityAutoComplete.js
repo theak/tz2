@@ -54,7 +54,8 @@ export default class CityAutoComplete extends Component {
   }
   
   onBlur() {
-    if (this.refs.autoComplete.state.searchText.length === 0) this.props.onBlur();
+    if (this.refs.autoComplete.state.searchText.length === 0
+        && this.props.onBlur) this.props.onBlur();
   }
 
   render() {
@@ -62,8 +63,8 @@ export default class CityAutoComplete extends Component {
       <div id='search'>
         <AutoComplete
           ref="autoComplete"
-          inputStyle={{fontSize: '24px'}}
-          hintStyle={{fontSize: '24px'}}
+          inputStyle={{fontSize: '18px'}}
+          hintStyle={{fontSize: '18px'}}
           className='autoComplete'
           hintText="Start typing the city to add"
           fullWidth={true}
