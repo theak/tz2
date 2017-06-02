@@ -128,8 +128,10 @@ class App extends Component {
       });
   }
 
-  askForHomeCity() {
-    if (this.state.welcomeDismissed) this.refs.homeCityDialog.open();
+  askForHomeCity(text=null) {
+    const introText = text ? "Edit" : "To get started, enter";
+    if (this.state.welcomeDismissed)
+      this.refs.homeCityDialog.open(introText + " your home city", text);
     else this.setState({askForHomeCity: true});
   }
 
@@ -142,6 +144,7 @@ class App extends Component {
     timeZones[0].name = city;
     this.setState({timeZones: timeZones});
     this.geo.getPhotosForCity(city, (photos) => {
+      timeZones[0].imgIndex = 0;
       timeZones[0].photos = photos;
       this.setState({timeZones: timeZones});
       this.updateLocalStorage();
@@ -215,6 +218,7 @@ class App extends Component {
           units={this.state.timeZones.length && this.state.timeZones[0].units}
           onToggleUnits={this.handleToggleUnits}
           dragged={dragged} onChangeImage={this.handleChangeImage}
+          onEditHomeCity={() => this.askForHomeCity(this.state.timeZones[0].name)}
           onDrag={this.startDrag} onDelete={this.removeTimezone} />;
     });
 
@@ -245,7 +249,7 @@ class App extends Component {
         <MuiThemeProvider>
           <NewTimezoneDialog
             ref='homeCityDialog'
-            title='To get started, enter your home city'
+            title='Enter your home city'
             onSelect={(city) => this.handleHomeCity(city.text)} />
         </MuiThemeProvider>
         <MuiThemeProvider>

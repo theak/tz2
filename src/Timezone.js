@@ -9,7 +9,7 @@ import Weather from './Weather';
 
 const titleStyle = {marginTop: '-30px', marginBottom: '-30px'};
 
-function displayOffset(tzOffset) { //
+function displayOffset(tzOffset) {
   return ((tzOffset > 0) ? '+' : '') + (tzOffset / 60);
 }
 
@@ -53,7 +53,11 @@ export default function Timezone(props) {
         className={'tz' + (dragged ? ' dragged' : '')}
         key={index} title={time}
         subtitle={<div className='subtitle'>
-          <h1 className='city'>{timeZone.name}</h1>{offset}</div>}
+          <h1 className={'city' + ((index === 0) ? ' pointer' : '')}
+              onTouchTap={(index === 0) ? props.onEditHomeCity : () => {}}>
+            {timeZone.name}
+          </h1>
+          {timeZone.name ? offset : <div/>}</div>}
         titleBackground='rgba(0, 0, 0, 0)'
         titleStyle={titleStyle}>
       {header} {tzDelete} {tzImg}

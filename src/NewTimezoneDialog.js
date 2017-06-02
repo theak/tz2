@@ -13,9 +13,13 @@ export default class NewTimezoneDialog extends React.Component {
     this.open = this.open.bind(this);
   }
 
-  open() {
-  	this.setState({open: true}, 
-  		() => this.refs.cityAutoComplete.focus());
+  open(title=null, text=null) {
+    this.setState({open: true, title: title}, () => {
+      if (text) this.refs.cityAutoComplete.setText(text);
+      this.refs.cityAutoComplete.focus();
+      if (window.jQuery && text) setTimeout(
+        () => window.jQuery('.autoComplete>input').select(), 10);
+    });
   }
 
   handleClose() {
@@ -30,7 +34,7 @@ export default class NewTimezoneDialog extends React.Component {
   render() {
     const actions = [
       <FlatButton
-        label="Add"
+        label='Confirm'
         primary={false}
         style={{marginBottom: 10}}
         onTouchTap={this.handleClose}
@@ -40,7 +44,7 @@ export default class NewTimezoneDialog extends React.Component {
     return (
       <div>
         <Dialog
-          title={this.props.title}
+          title={this.state.title || this.props.title}
           actions={actions}
           modal={false}
           open={this.state.open}

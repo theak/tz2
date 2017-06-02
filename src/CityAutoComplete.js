@@ -45,7 +45,11 @@ export default class CityAutoComplete extends Component {
   };
 
   clear() {
-    this.refs.autoComplete.setState({searchText: ''})
+    this.setText('');
+  }
+
+  setText(text) {
+    this.refs.autoComplete.setState({searchText: text});
   }
 
   focus() {
