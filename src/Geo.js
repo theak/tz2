@@ -39,7 +39,7 @@ export default class Geo {
   }
 
   getPhotos(photos) {
-    const height = (window.innerHeight) * window.devicePixelRatio;
+    const height = Math.floor((window.innerHeight) * window.devicePixelRatio);
     return photos.map((photo) => {
       const width = Math.floor(photo.width / photo.height * height);
       const imgUrl = photo.getUrl({maxWidth: width, maxHeight: height});
