@@ -104,6 +104,6 @@
     min-width: 300px;
   }
 }
-#gridList>div:last-child {
+#gridList>div:nth-child(4) {
   width: 200px !important;
 }

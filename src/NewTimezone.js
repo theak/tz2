@@ -30,6 +30,10 @@ export default class NewTimezone extends Component {
   render() {
     let content = (<div>
         <div className='fabWrapper'>
+        <NewTimezoneDialog 
+            ref='newTimezoneDialog'
+            title='Add new timezone'
+            onSelect={this.onSelect} />
           <FloatingActionButton 
               className={'add' + (this.state.education ? ' education' : '')}
               onTouchTap={this.handleTap}
@@ -42,10 +46,6 @@ export default class NewTimezone extends Component {
             <br/>Add a new city to your world clock
           </div>
         </div>
-        <NewTimezoneDialog 
-            ref='newTimezoneDialog'
-            title='Add new timezone'
-            onSelect={this.onSelect} />
       </div>);
     return (
       <GridTile key='new'>{content}</GridTile>
