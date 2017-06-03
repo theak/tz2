@@ -5,7 +5,7 @@ import Settings from 'material-ui/svg-icons/action/settings';
 import './SettingsDialog.css';
 
 const styles = {
-  settingsStyle: {position: 'absolute', right: 20, bottom: 20,
+  settingsStyle: {position: 'absolute', right: 29, top: 40,
     cursor: 'pointer', opacity: 0.5, width: 32, height: 32,
     transition: 'all ease 0.3s'},
   titleStyle: {fontFamily: 'Lato, sans-serif', fontSize: 24, paddingBottom: 24}

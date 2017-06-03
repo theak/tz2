@@ -1,15 +1,14 @@
 import React, {Component} from 'react';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
-import ExpandLess from 'material-ui/svg-icons/navigation/expand-less';
-import {GridTile} from 'material-ui/GridList';
 import NewTimezoneDialog from './NewTimezoneDialog';
 import './NewTimezone.css';
 
 export default class NewTimezone extends Component {
   constructor(props) {
     super(props);
-    this.state = {education: props.education};
+    this.state = {education: props.education, hover: false, educationTimeout: false};
+
     this.handleTap = this.handleTap.bind(this);
     this.onSelect = this.onSelect.bind(this);
   }
@@ -23,32 +22,36 @@ export default class NewTimezone extends Component {
     this.setState({education: false});
   }
 
+  handleHover(mouseEntering) {
+    this.setState({hover: mouseEntering});
+  }
+
+  componentDidMount() {
+    setTimeout(() => this.setState({educationTimeout: true}), 3000);
+  }
+
   displayStyle(isVisible) {
     return {display: isVisible ? 'block' : 'none'}
   }
 
   render() {
-    let content = (<div>
-        <div className='fabWrapper'>
-        <NewTimezoneDialog 
-            ref='newTimezoneDialog'
-            title='Add new timezone'
-            onSelect={this.onSelect} />
+    const showText = (this.state.education && !this.state.educationTimeout) || this.state.hover;
+    return (<div className='fabWrapper'>
+      <NewTimezoneDialog 
+          ref='newTimezoneDialog'
+          title='Add new timezone'
+          onSelect={this.onSelect} />
+        <div className={'instructions' + (this.state.education ? ' education' : '')}>
+          <b className={'buttonText' + (showText ? ' show' : '')}>Add timezone</b>
           <FloatingActionButton 
-              className={'add' + (this.state.education ? ' education' : '')}
+              className={'add'}
               onTouchTap={this.handleTap}
-              backgroundColor='#1565c0'>
+              onMouseEnter={() => this.handleHover(true)}
+              onMouseLeave={() => this.handleHover(false)}
+              backgroundColor='#b71c1c'>
             <ContentAdd />
           </FloatingActionButton>
-          <p className='instructions' style={this.displayStyle(!this.state.education)}><b>ADD LOCATION</b></p>
-          <div className='instructions' style={this.displayStyle(this.state.education)}>
-            <ExpandLess className='arrow'/>
-            <br/>Add a new city to your world clock
-          </div>
         </div>
       </div>);
-    return (
-      <GridTile key='new'>{content}</GridTile>
-    );
   }
 }

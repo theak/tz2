@@ -38,7 +38,7 @@
   color: #FFF !important;
 }
 .tz:hover .tzbtn {
-  opacity: 0.5;
+  opacity: 0.7;
 }
 .tzbtn:hover {
   opacity: 1 !important;
@@ -91,19 +91,13 @@
 .offset {
   font-size: 18px;
 }
-#root>div>div {
-	width: 100%;
-}
 .col0 {background-color: #1a237e !important}
 .col1 {background-color: #880e4f !important}
 .col2 {background-color: #b71c1c !important}
 .col3 {background-color: #004d40 !important}
 
-@media(max-width: 600px) {
+/*@media(max-width: 600px) {*/
   #gridList>div {
-    min-width: 300px;
+    min-width: 320px;
   }
-}
-#gridList>div:nth-child(4) {
-  width: 200px !important;
-}
+/*}*/

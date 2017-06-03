@@ -10,7 +10,8 @@ export default class Weather extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.units !== nextProps.units) {
+    if ((this.props.units !== nextProps.units) 
+        || (this.props.location !== nextProps.location)) {
       this.updateWeather(nextProps);
     }
   }

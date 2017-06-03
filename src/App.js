@@ -264,7 +264,7 @@ class App extends Component {
       />);
 
     const rootStyle = {display: 'flex', flexWrap: 'wrap'}
-    const gridListStyle = {display: 'flex', flexWrap: 'nowrap', overflowX: 'auto'}
+    const gridListStyle = {display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', marginRight: 100}
 
     return (
       <div style={rootStyle}>
@@ -282,18 +282,20 @@ class App extends Component {
             onSelect={(city) => this.handleHomeCity(city.text)} />
         </MuiThemeProvider>
         <MuiThemeProvider>
-          <GridList cellHeight={this.state.height} cols={2.2} padding={0}
+          <GridList cellHeight={this.state.height} cols={2.8} padding={0}
               style={gridListStyle}
               id='gridList'
               className='condensed'
               onMouseUp={this.endDrag}
               onMouseMove={this.handleMouseMove}>
             {timeZones}
-            <NewTimezone
-              ref='newTz'
-              education={(this.state.timeZones.length < 2) && this.state.welcomeDismissed}
-              onAddCity={this.handleNewCity}/>
           </GridList>
+        </MuiThemeProvider>
+        <MuiThemeProvider>
+          <NewTimezone
+            ref='newTz'
+            education={(this.state.timeZones.length < 2)}
+            onAddCity={this.handleNewCity}/>
         </MuiThemeProvider>
         <MuiThemeProvider>
           <SettingsDialog
