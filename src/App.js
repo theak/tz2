@@ -6,6 +6,7 @@ import Geo from './Geo';
 import Timezone from './Timezone';
 import NewTimezone from './NewTimezone';
 import NewTimezoneDialog from './NewTimezoneDialog';
+import SettingsDialog from './SettingsDialog';
 import Welcome from './Welcome';
 import Ticker from './Ticker';
 import './App.css';
@@ -13,7 +14,8 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 
 injectTapEventPlugin();
 
-const localKey = 'timeZones';
+const tzLocalKey = 'timeZones';
+const settingsLocalKey = 'settings';
 const placeholderImg = 'grey.png';
 const initialTimezones = [{
   name: null,
@@ -47,7 +49,7 @@ function hasKeys(obj, keys) {
 class App extends Component {
   constructor() {
     super();
-    const lastTimezones = localStorage.getItem(localKey);
+    const lastTimezones = localStorage.getItem(tzLocalKey);
     let timeZones = initialTimezones;
     this.returnVisit = false;
     if (lastTimezones) {
@@ -59,6 +61,9 @@ class App extends Component {
       }
     }
 
+    const settings = this.returnVisit && localStorage.getItem(settingsLocalKey)
+      && JSON.parse(localStorage.getItem(settingsLocalKey));
+
     this.state = {
       width: window.innerWidth,
       height: window.innerHeight,
@@ -66,7 +71,8 @@ class App extends Component {
       seconds: Math.floor(new Date().getSeconds()),
       snackbarOpen: false,
       dragState: {active: false},
-      welcomeDismissed: this.returnVisit
+      welcomeDismissed: this.returnVisit,
+      settings: settings ? settings : {units: 'f'}
     };
 
     this.geo = new Geo();
@@ -111,7 +117,8 @@ class App extends Component {
   }
 
   updateLocalStorage() {
-    localStorage.setItem(localKey, JSON.stringify(this.state.timeZones));
+    localStorage.setItem(tzLocalKey, JSON.stringify(this.state.timeZones));
+    localStorage.setItem(settingsLocalKey, JSON.stringify(this.state.settings));
   }
 
   handleNewCity(city) {
@@ -157,11 +164,11 @@ class App extends Component {
     this.setState({timeZones: timeZones}, this.updateLocalStorage);
   }
 
-  handleToggleUnits(callback) {
-    const timeZones = this.state.timeZones.slice();
-    timeZones[0].units = (timeZones[0].units === 'f') ? 'c' : 'f';
-    this.setState({timeZones: timeZones}, () => {
-      callback();
+  handleToggleUnits(callback=null) {
+    const settings = this.state.settings;
+    settings.units = (settings.units === 'f') ? 'c' : 'f';
+    this.setState({settings: settings}, () => {
+      if (callback) callback();
       this.updateLocalStorage();
     });
   }
@@ -215,7 +222,7 @@ class App extends Component {
       const dragged = (this.state.dragState.active
           && this.state.dragState.startIndex === index);
       return <Timezone key={index} timeZone={timeZone} index={index}
-          units={this.state.timeZones.length && this.state.timeZones[0].units}
+          units={this.state.timeZones.length && this.state.settings.units}
           onToggleUnits={this.handleToggleUnits}
           dragged={dragged} onChangeImage={this.handleChangeImage}
           onEditHomeCity={() => this.askForHomeCity(this.state.timeZones[0].name)}
@@ -272,6 +279,12 @@ class App extends Component {
               seconds={this.state.seconds}
               width={window.jQuery && window.jQuery('.tz') 
                   && (window.jQuery('.tz').width() * this.state.timeZones.length)}
+          />
+        </MuiThemeProvider>
+        <MuiThemeProvider>
+          <SettingsDialog
+            settings={this.state.settings}
+            onToggleUnits={() => this.handleToggleUnits()}
           />
         </MuiThemeProvider>
       </div>

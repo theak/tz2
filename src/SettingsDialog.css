@@ -1,0 +1,4 @@
+.gear:hover {
+  opacity: 1 !important;
+  transform: rotate(90deg);
+}
