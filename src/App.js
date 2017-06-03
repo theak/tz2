@@ -282,7 +282,7 @@ class App extends Component {
             onSelect={(city) => this.handleHomeCity(city.text)} />
         </MuiThemeProvider>
         <MuiThemeProvider>
-          <GridList cellHeight={this.state.height} cols={2.8} padding={0}
+          <GridList cellHeight={this.state.height} cols={3} padding={0}
               style={gridListStyle}
               id='gridList'
               className='condensed'
