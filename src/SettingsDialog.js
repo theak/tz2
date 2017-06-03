@@ -8,7 +8,7 @@ const styles = {
   settingsStyle: {position: 'absolute', right: 20, bottom: 20,
     cursor: 'pointer', opacity: 0.5, width: 32, height: 32,
     transition: 'all ease 0.3s'},
-  titleStyle: {fontFamily: 'Lato, sans-serif', fontSize: '24px'}
+  titleStyle: {fontFamily: 'Lato, sans-serif', fontSize: 24, paddingBottom: 24}
 };
 
 export default class SettingsDialog extends React.Component {
@@ -47,7 +47,6 @@ export default class SettingsDialog extends React.Component {
           titleStyle={styles.titleStyle}
           contentStyle={{maxWidth: '512px'}}
         >
-          <br/>
           <Checkbox
             label="Use Celsius"
             style={styles.checkbox}
