@@ -10,7 +10,7 @@ import Weather from './Weather';
 const titleStyle = {marginTop: '-30px', marginBottom: '-30px'};
 
 function displayOffset(tzOffset) {
-  return ((tzOffset > 0) ? '+' : '') + (tzOffset / 60);
+  return ((tzOffset >= 0) ? '+' : '') + (tzOffset / 60);
 }
 
 //Props: timeZone, index, dragged, onDrag(clientX, index), onDelete(index), onChangeImage(tzIndex, imgIndex)
@@ -30,8 +30,8 @@ export default function Timezone(props) {
       onTouchTap={() => props.onDelete(index)}
     />) : <div/>;
   const header = <div className={'header col' + (index % 4)}/>;
-  const time = <h1 className='time'>
-      <Timestamp time={timeZone.timestamp} format='time' utc={false}/></h1>;
+  const timeStamp = <Timestamp time={timeZone.timestamp} format='time' utc={false}/>;
+  const time = <h1 className='time'>{timeStamp}</h1>;
   const offset = <h3 className='offset'>GMT {displayOffset(timeZone.offset)}</h3>;
   const leftArrow = (timeZone.imgIndex > 0) 
       ? <KeyboardArrowLeft color='#DDD'

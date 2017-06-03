@@ -17,12 +17,18 @@ injectTapEventPlugin();
 const tzLocalKey = 'timeZones';
 const settingsLocalKey = 'settings';
 const placeholderImg = 'grey.png';
+const utcTimeName = 'UTC Time';
+const utcTimeZone = {
+  name: utcTimeName,
+  offset: 0,
+  imgIndex: 0,
+  photos: [{imgUrl: '/utc.png'}]
+}
 const initialTimezones = [{
   name: null,
   offset: 0 - new Date().getTimezoneOffset(),
   imgIndex: 0,
-  photos: [{imgUrl: placeholderImg}],
-  units: 'f'
+  photos: [{imgUrl: placeholderImg}]
 }];
 
 function getTimeAtOffset(offset) {
@@ -77,6 +83,8 @@ class App extends Component {
 
     this.geo = new Geo();
     this.handleNewCity = this.handleNewCity.bind(this);
+    this.handleAddUtcTime = this.handleAddUtcTime.bind(this);
+    this.handleRemoveUtcTime = this.handleRemoveUtcTime.bind(this);
     this.handleChangeImage = this.handleChangeImage.bind(this);
     this.handleToggleUnits = this.handleToggleUnits.bind(this);
     this.handleHomeCity = this.handleHomeCity.bind(this);
@@ -133,6 +141,20 @@ class App extends Component {
         this.updateTime();
         this.updateLocalStorage();
       });
+  }
+
+  handleAddUtcTime() {
+    this.setState({
+      timeZones: this.state.timeZones.concat(utcTimeZone)}, () => {
+        this.updateTime();
+        this.updateLocalStorage();
+      });
+  }
+
+  handleRemoveUtcTime() {
+    const utcIndex = this.state.timeZones.findIndex(
+      (tz) => tz.name === utcTimeName);
+    this.removeTimezone(utcIndex);
   }
 
   askForHomeCity(text=null) {
@@ -273,18 +295,23 @@ class App extends Component {
               onAddCity={this.handleNewCity}/>
           </GridList>
         </MuiThemeProvider>
+        <MuiThemeProvider>
+          <SettingsDialog
+            settings={this.state.settings}
+            onToggleUnits={() => this.handleToggleUnits()}
+            hasUtcTime={this.state.timeZones.filter((tz) => 
+              tz.name === utcTimeName
+            ).length > 0}
+            onAddUtcTime={this.handleAddUtcTime}
+            onRemoveUtcTime={this.handleRemoveUtcTime}
+          />
+        </MuiThemeProvider>
         <MuiThemeProvider>{snackbar}</MuiThemeProvider>
         <MuiThemeProvider>
           <Ticker
               seconds={this.state.seconds}
               width={window.jQuery && window.jQuery('.tz') 
                   && (window.jQuery('.tz').width() * this.state.timeZones.length)}
-          />
-        </MuiThemeProvider>
-        <MuiThemeProvider>
-          <SettingsDialog
-            settings={this.state.settings}
-            onToggleUnits={() => this.handleToggleUnits()}
           />
         </MuiThemeProvider>
       </div>

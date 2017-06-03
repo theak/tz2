@@ -29,6 +29,7 @@ export default class Weather extends Component {
     }
   }
   render() {
+    if (this.props.location === "UTC Time") return <div/>;
     const weather = this.state.weather;
     if (!weather) {
       if (this.props.location) this.updateWeather();

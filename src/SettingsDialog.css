@@ -1,3 +1,6 @@
+.gear {
+  z-index: 999999 !important;
+}
 .gear:hover {
   opacity: 1 !important;
   transform: rotate(90deg);
