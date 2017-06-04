@@ -270,7 +270,7 @@ class App extends Component {
       />);
 
     const rootStyle = {display: 'flex', flexWrap: 'wrap'}
-    const gridListStyle = {display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', marginRight: 100}
+    const gridListStyle = {display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', marginRight: 90}
 
     return (
       <div style={rootStyle}>

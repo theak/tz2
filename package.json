@@ -14,7 +14,7 @@
     "react-mfb": "^0.4.1",
     "react-progressive-image": "^0.1.2",
     "react-scroll-horizontal": "^1.1.2",
-    "react-tap-event-plugin": "^2.0.1",
+    "react-tap-event-plugin": "^2.0.1"
   },
   "devDependencies": {
     "react-scripts": "1.0.3"
