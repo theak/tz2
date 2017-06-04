@@ -111,13 +111,13 @@
   transition: all 0.15s ease !important;
 }
 
-.tz:hover>.timeSlider>div>div>div:nth-child(3) {
+.tz:not(:active):hover>.timeSlider>div>div>div:nth-child(3) {
   box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
   padding: 10px !important;
 }
 
 .tz:hover>.timeSlider>div>div>div:nth-child(3):not(:hover) {
-  animation: 0.5s ease-in-out 0s 2 flash;
+  animation: 0.5s ease-in-out 0s 1 flash;
 }
 
 @keyframes flash {
