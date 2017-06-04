@@ -4,7 +4,7 @@ import KeyboardArrowRight from 'material-ui/svg-icons/hardware/keyboard-arrow-ri
 import KeyboardArrowLeft from 'material-ui/svg-icons/hardware/keyboard-arrow-left';
 import {GridTile} from 'material-ui/GridList';
 import ProgressiveImage from 'react-progressive-image';
-import Timestamp from 'react-timestamp';
+import moment from 'moment';
 import Weather from './Weather';
 
 const titleStyle = {marginTop: '-30px', marginBottom: '-30px'};
@@ -30,7 +30,7 @@ export default function Timezone(props) {
       onTouchTap={() => props.onDelete(index)}
     />) : <div/>;
   const header = <div className={'header col' + (index % 4)}/>;
-  const timeStamp = <Timestamp time={timeZone.timestamp} format='time' utc={false}/>;
+  const timeStamp = new moment(timeZone.timestamp * 1000).utc().format('h:mma');
   const time = <h1 className='time'>{timeStamp}</h1>;
   const offset = <h3 className='offset'>GMT {displayOffset(timeZone.offset)}</h3>;
   const leftArrow = (timeZone.imgIndex > 0) 

@@ -7,6 +7,7 @@
     "fetch-jsonp": "^1.0.6",
     "little-loader": "^0.2.0",
     "material-ui": "^0.18.1",
+    "moment": "^2.18.1",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
     "react-localstorage": "^0.3.1",
@@ -14,7 +15,6 @@
     "react-progressive-image": "^0.1.2",
     "react-scroll-horizontal": "^1.1.2",
     "react-tap-event-plugin": "^2.0.1",
-    "react-timestamp": "^4.2.1"
   },
   "devDependencies": {
     "react-scripts": "1.0.3"
