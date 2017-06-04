@@ -78,7 +78,7 @@ class App extends Component {
       snackbarOpen: false,
       dragState: {active: false},
       welcomeDismissed: this.returnVisit,
-      settings: settings ? settings : {units: 'f'}
+      settings: settings ? settings : {units: 'f', military: false}
     };
 
     this.geo = new Geo();
@@ -195,6 +195,12 @@ class App extends Component {
     });
   }
 
+  handleMilitary(on) {
+    const settings = this.state.settings;
+    settings.military = on;
+    this.setState({settings: settings}, this.updateLocalStorage);
+  }
+
   startDrag(clientX, clientIndex) {
     if (clientIndex) this.setState({dragState: 
         {active: true, startX: clientX, startIndex: clientIndex}});
@@ -243,12 +249,12 @@ class App extends Component {
     const timeZones = this.state.timeZones.map((timeZone, index) => {
       const dragged = (this.state.dragState.active
           && this.state.dragState.startIndex === index);
-      return <Timezone key={index} timeZone={timeZone} index={index}
-          units={this.state.timeZones.length && this.state.settings.units}
-          onToggleUnits={this.handleToggleUnits}
-          dragged={dragged} onChangeImage={this.handleChangeImage}
-          onEditHomeCity={() => this.askForHomeCity(this.state.timeZones[0].name)}
-          onDrag={this.startDrag} onDelete={this.removeTimezone} />;
+      return <Timezone key={index} timeZone={timeZone} index={index} military={this.state.settings.military}
+        units={this.state.timeZones.length && this.state.settings.units}
+        onToggleUnits={this.handleToggleUnits}
+        dragged={dragged} onChangeImage={this.handleChangeImage}
+        onEditHomeCity={() => this.askForHomeCity(this.state.timeZones[0].name)}
+        onDrag={this.startDrag} onDelete={this.removeTimezone} />;
     });
 
     const removed = this.state.lastDeleted;
@@ -306,6 +312,7 @@ class App extends Component {
             ).length > 0}
             onAddUtcTime={this.handleAddUtcTime}
             onRemoveUtcTime={this.handleRemoveUtcTime}
+            onToggleMilitary={(_, on) => this.handleMilitary(on)}
           />
         </MuiThemeProvider>
         <MuiThemeProvider>{snackbar}</MuiThemeProvider>

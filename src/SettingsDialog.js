@@ -8,7 +8,8 @@ const styles = {
   settingsStyle: {position: 'absolute', right: 29, top: 40,
     cursor: 'pointer', opacity: 0.5, width: 32, height: 32,
     transition: 'all ease 0.3s'},
-  titleStyle: {fontFamily: 'Lato, sans-serif', fontSize: 24, paddingBottom: 24}
+  titleStyle: {fontFamily: 'Lato, sans-serif', fontSize: 24, paddingBottom: 24},
+  checkbox: {paddingBottom: 18}
 };
 
 export default class SettingsDialog extends React.Component {
@@ -48,6 +49,12 @@ export default class SettingsDialog extends React.Component {
           contentStyle={{maxWidth: '512px'}}
         >
           <Checkbox
+            label="Use 24 hour time"
+            style={styles.checkbox}
+            checked={this.props.settings.military}
+            onCheck={this.props.onToggleMilitary}
+          />
+          <Checkbox
             label="Use Celsius"
             style={styles.checkbox}
             checked={this.props.settings.units === 'c'}
@@ -62,7 +69,6 @@ export default class SettingsDialog extends React.Component {
               else this.props.onRemoveUtcTime();
             }}
           />
-          <br/>
         </Dialog>
       </div>
     );

@@ -13,7 +13,7 @@ function displayOffset(tzOffset) {
   return ((tzOffset >= 0) ? '+' : '') + (tzOffset / 60);
 }
 
-//Props: timeZone, index, dragged, onDrag(clientX, index), onDelete(index), onChangeImage(tzIndex, imgIndex)
+//Props: timeZone, index, dragged, military, onDrag(clientX, index), onDelete(index), onChangeImage(tzIndex, imgIndex)
 export default function Timezone(props) {
   const timeZone = props.timeZone;
   const index = props.index;
@@ -30,7 +30,7 @@ export default function Timezone(props) {
       onTouchTap={() => props.onDelete(index)}
     />) : <div/>;
   const header = <div className={'header col' + (index % 4)}/>;
-  const timeStamp = new moment(timeZone.timestamp * 1000).utc().format('h:mma');
+  const timeStamp = new moment(timeZone.timestamp * 1000).utc().format(props.military ? 'H:mm' : 'h:mma');
   const time = <h1 className='time'>{timeStamp}</h1>;
   const offset = <h3 className='offset'>GMT {displayOffset(timeZone.offset)}</h3>;
   const leftArrow = (timeZone.imgIndex > 0) 
