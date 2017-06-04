@@ -51,8 +51,3 @@ div.autocomplete {
   50% {transform: scale3d(1.15, 1.15, 1.15)}
   to {transform: scale3d(1, 1, 1)}
 }
-@keyframes bounce {
-  from {margin-top: 10px}
-  50% {margin-top: 0px}
-  to {margin-top: 10px}
-}

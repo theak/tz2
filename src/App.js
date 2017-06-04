@@ -78,7 +78,8 @@ class App extends Component {
       snackbarOpen: false,
       dragState: {active: false},
       welcomeDismissed: this.returnVisit,
-      settings: settings ? settings : {units: 'f', military: false}
+      settings: settings ? settings : {units: 'f', military: false},
+      minutesDelta: 0
     };
 
     this.geo = new Geo();
@@ -88,6 +89,7 @@ class App extends Component {
     this.handleChangeImage = this.handleChangeImage.bind(this);
     this.handleToggleUnits = this.handleToggleUnits.bind(this);
     this.handleHomeCity = this.handleHomeCity.bind(this);
+    this.handleChangeDelta = this.handleChangeDelta.bind(this);
     this.removeTimezone = this.removeTimezone.bind(this);
     this.updateDimensions = this.updateDimensions.bind(this);
     this.undoRemoveTimezone = this.undoRemoveTimezone.bind(this);
@@ -113,6 +115,7 @@ class App extends Component {
   }
 
   updateTime() {
+    if (this.state.minutesDelta !== 0) return;
     const timeZones = this.state.timeZones.slice();
     for (var timeZone of timeZones)
       timeZone.timestamp = getTimeAtOffset(timeZone.offset);
@@ -226,6 +229,10 @@ class App extends Component {
     }
   }
 
+  handleChangeDelta(minutesDelta) {
+    this.setState({minutesDelta: minutesDelta});
+  }
+
   removeTimezone(index) {
     const timeZones = this.state.timeZones.slice();
     timeZones[index].index = index;
@@ -253,21 +260,13 @@ class App extends Component {
         units={this.state.timeZones.length && this.state.settings.units}
         onToggleUnits={this.handleToggleUnits}
         dragged={dragged} onChangeImage={this.handleChangeImage}
+        minutesDelta={this.state.minutesDelta}
         onEditHomeCity={() => this.askForHomeCity(this.state.timeZones[0].name)}
-        onDrag={this.startDrag} onDelete={this.removeTimezone} />;
+        onDrag={this.startDrag} onDelete={this.removeTimezone}
+        onChangeDelta={this.handleChangeDelta}/>;
     });
 
     const removed = this.state.lastDeleted;
-    const snackbar = (
-      <Snackbar 
-        open={this.state.snackbarOpen} 
-        message={removed ? ('Removed ' + getFirstPart(this.state.lastDeleted.name)) 
-                         : 'Removal undone'}
-        action={removed && 'undo'}
-        autoHideDuration={removed ? 5000 : 1000}
-        onActionTouchTap={this.undoRemoveTimezone}
-        onRequestClose={() => this.setState({snackbarOpen: false})}
-      />);
 
     const rootStyle = {display: 'flex', flexWrap: 'wrap'}
     const gridListStyle = {display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', paddingRight: 90}
@@ -307,7 +306,7 @@ class App extends Component {
           <SettingsDialog
             settings={this.state.settings}
             onToggleUnits={() => this.handleToggleUnits()}
-            hasUtcTime={this.state.timeZones.filter((tz) => 
+            hasUtcTime={this.state.timeZones.filter((tz) =>
               tz.name === utcTimeName
             ).length > 0}
             onAddUtcTime={this.handleAddUtcTime}
@@ -315,7 +314,26 @@ class App extends Component {
             onToggleMilitary={(_, on) => this.handleMilitary(on)}
           />
         </MuiThemeProvider>
-        <MuiThemeProvider>{snackbar}</MuiThemeProvider>
+        <MuiThemeProvider>
+          <Snackbar
+            open={this.state.snackbarOpen}
+            message={removed ? ('Removed ' + getFirstPart(this.state.lastDeleted.name))
+                : 'Removal undone'}
+            action={removed ? 'undo' : null}
+            autoHideDuration={removed ? 5000 : 1000}
+            onActionTouchTap={this.undoRemoveTimezone}
+            onRequestClose={() => this.setState({snackbarOpen: false})}
+          />
+        </MuiThemeProvider>
+        <MuiThemeProvider>
+          <Snackbar
+            open={this.state.minutesDelta !== 0}
+            message='The time has been adjusted'
+            action='Reset'
+            onRequestClose={() => {}}
+            onActionTouchTap={() => this.setState({minutesDelta: 0})}
+          />
+        </MuiThemeProvider>
         <MuiThemeProvider>
           <Ticker
               seconds={this.state.seconds}
