@@ -1,12 +1,13 @@
 import React from 'react';
+import Avatar from 'material-ui/Avatar';
 import Dialog from 'material-ui/Dialog';
 import Checkbox from 'material-ui/Checkbox';
 import Settings from 'material-ui/svg-icons/action/settings';
 import './SettingsDialog.css';
 
 const styles = {
-  settingsStyle: {position: 'absolute', right: 29, top: 40,
-    cursor: 'pointer', opacity: 0.5, width: 32, height: 32,
+  settingsStyle: {position: 'absolute', right: 26, top: 20,
+    cursor: 'pointer', backgroundColor: 'rgba(60, 60, 60, 0.85)', width: 40, height: 40,
     transition: 'all ease 0.3s'},
   titleStyle: {fontFamily: 'Lato, sans-serif', fontSize: 24, paddingBottom: 24},
   checkbox: {paddingBottom: 18}
@@ -34,10 +35,12 @@ export default class SettingsDialog extends React.Component {
 
     return (
       <div>
-        <Settings
+        <Avatar
           className='gear'
+          icon={<Settings/>}
           style={styles.settingsStyle}
-          onTouchTap={this.handleOpen}/>
+          onTouchTap={this.handleOpen}
+          />
         <Dialog
           className='welcome'
           title="Settings"

@@ -1,7 +1,13 @@
 .gear {
   z-index: 999999 !important;
 }
+.gear:after {
+  opacity: 0.8
+}
 .gear:hover {
   opacity: 1 !important;
   transform: rotate(90deg);
+}
+.gear>svg {
+  opacity: 1 !important;
 }
