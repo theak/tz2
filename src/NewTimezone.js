@@ -27,7 +27,7 @@ export default class NewTimezone extends Component {
   }
 
   componentDidMount() {
-    setTimeout(() => this.setState({educationTimeout: true}), 3000);
+    //setTimeout(() => this.setState({educationTimeout: true}), 3000);
   }
 
   displayStyle(isVisible) {
@@ -42,7 +42,7 @@ export default class NewTimezone extends Component {
           title='Add new timezone'
           onSelect={this.onSelect} />
         <div className={'instructions' + (this.state.education ? ' education' : '')}>
-          <b className={'buttonText' + (showText ? ' show' : '')}>Add timezone</b>
+          <b className={'buttonText' + (showText ? ' show' : '')}>{this.state.education ? 'Add a timezone »': 'Add timezone'}</b>
           <FloatingActionButton 
               className={'add'}
               onTouchTap={this.handleTap}
