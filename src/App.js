@@ -112,6 +112,9 @@ class App extends Component {
       window.jQuery('#gridList')[0].scrollLeft -= (delta * 30);
       event.preventDefault();
     });
+
+    window.ga && window.ga('send', 'event', 'tz', 'load', this.state.timeZones[0].name,
+      this.state.timeZones.length);
   }
 
   updateTime() {
@@ -139,6 +142,8 @@ class App extends Component {
       photos: city.value.photos,
       imgIndex: 0
     };
+    window.ga && window.ga('send', 'event', 'tz', 'newCity', newTz.name,
+      this.state.timeZones.length + 1);
     this.setState({
       timeZones: this.state.timeZones.concat(newTz)}, () => {
         this.updateTime();
