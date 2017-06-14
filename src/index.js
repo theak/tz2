@@ -10,7 +10,13 @@ ReactDOM.render(<App />, document.getElementById('root'));
 // https://github.com/facebookincubator/create-react-app/issues/2398
 
 // Delete all the bullshit service workers that were created in the past
-navigator.serviceWorker.getRegistrations().then(function(registrations) {
- for(let registration of registrations) {
-  registration.unregister()
-} })
+try {
+  navigator.serviceWorker.getRegistrations().then(function(registrations) {
+    for(let registration of registrations) {
+      registration.unregister()
+    }
+  });
+}
+catch(err) {
+  //do nothing
+}

@@ -29,6 +29,16 @@
 
       ga('create', 'UA-25947294-3', 'auto');
       ga('send', 'pageview');
+
+      if (typeof window.onerror === 'object') {
+        window.onerror = function (err, url, line) {
+          if (ga) {
+            ga('send', 'exception', {
+              'exDescription': line + ' ' + err
+            });
+          }
+        };
+      }
     </script>
   </body>
 </html>
